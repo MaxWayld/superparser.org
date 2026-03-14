@@ -1,0 +1,4371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UltraMegaMXWParser</title>
+<meta name="description" content="UltraMegaMXWParser - The ultimate satirical crypto dashboard. Turning chaos into Alpha.">
+<meta property="og:title" content="UltraMegaMXWParser">
+<meta property="og:description" content="Turning chaos into Alpha. Every number is fake. Every signal is a joke. Wake up.">
+<meta property="og:image" content="https://unavatar.io/x/MaxWayld">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@MaxWayld">
+<meta name="twitter:image" content="https://unavatar.io/x/MaxWayld">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#x1F4C8;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* =============================================
+   UltraMegaRoflParser - Skaald-inspired redesign
+   Premium scrolling long-page with 3D hero
+   ============================================= */
+
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+
+  --card: #0a0a0a;
+  --card-hover: #0f0f0f;
+  --elevated: #0e0e0e;
+  --border: #181818;
+  --border-light: #222222;
+  --text: #f5f5f5;
+  --text-dim: #999999;
+  --text-muted: #6b6b6b;
+  --green: #22c55e;
+  --red: #ef4444;
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ===== LOADER ===== */
+#loader {
+  position: fixed; inset: 0;
+  background: #000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 99999;
+  transition: opacity 1s ease;
+}
+#loader.hidden { opacity: 0; pointer-events: none; }
+.loader-spinner {
+  width: 40px; height: 40px;
+  border: 2px solid rgba(255,255,255,0.06);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loader-text {
+  margin-top: 16px; font-size: 11px;
+  color: rgba(255,255,255,0.25);
+  font-weight: 300; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: opacity 0.3s;
+}
+.loader-progress {
+  margin-top: 20px;
+  width: 200px;
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+  overflow: hidden;
+}
+.loader-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #fc1234;
+  border-radius: 1px;
+  transition: width 0.4s ease;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0 clamp(24px, 4vw, 64px);
+  height: 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.4s;
+}
+.navbar.scrolled {
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.navbar-logo {
+  font-size: 18px; font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.navbar-logo span {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 20px;
+}
+.navbar-links {
+  display: flex; align-items: center; gap: 32px;
+}
+.navbar-links a {
+  font-size: 13px; font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  position: relative;
+  transition: color 0.3s;
+}
+.navbar-links a:hover { color: #fff; }
+.navbar-links a::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: #fff;
+  transition: width 0.4s cubic-bezier(0.25,1,0.5,1);
+}
+.navbar-links a:hover::after { width: 100%; }
+
+/* ===== API STATUS BAR ===== */
+.api-status {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 6px 24px;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.navbar.scrolled ~ .api-status,
+.api-status.visible {
+  opacity: 1;
+}
+.api-status-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.api-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #333;
+}
+.api-dot.live {
+  background: #22c55e;
+  box-shadow: 0 0 4px rgba(34,197,94,0.5);
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+}
+.hero-canvas-container {
+  position: absolute; inset: 0;
+  z-index: 1;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+  padding: 0 24px;
+}
+.hero-title {
+  font-size: clamp(48px, 8vw, 120px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: #fff;
+  margin-bottom: 24px;
+}
+.hero-title em {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  display: inline-block;
+  min-width: 2ch;
+}
+.hero-title em .typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.85em;
+  background: #fc1234;
+  margin-left: 2px;
+  vertical-align: baseline;
+  animation: cursorBlink 0.6s step-end infinite;
+}
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 40px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+  color: rgba(255,255,255,0.55);
+  font-size: 14px; font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: heroFloat 2.5s ease-in-out infinite;
+}
+.hero-scroll-hint .line {
+  width: 1px; height: 50px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+}
+
+/* ===== SECTION SYSTEM ===== */
+.section {
+  position: relative;
+  padding: clamp(60px, 10vw, 140px) clamp(24px, 5vw, 80px);
+}
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ===== LIQUIDATION TICKER ===== */
+.liq-ticker {
+  overflow: hidden;
+  background: rgba(252, 18, 52, 0.06);
+  border-top: 1px solid rgba(252, 18, 52, 0.12);
+  border-bottom: 1px solid rgba(252, 18, 52, 0.12);
+  padding: 8px 0;
+  position: relative;
+  z-index: 10;
+}
+.liq-ticker-track {
+  display: flex;
+  gap: 48px;
+  white-space: nowrap;
+  animation: liqScroll 40s linear infinite;
+  width: max-content;
+}
+.liq-ticker-item {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.liq-ticker-item .liq-rekt {
+  color: #fc1234;
+  font-weight: 700;
+}
+.liq-ticker-item .liq-amount {
+  color: var(--text);
+  font-weight: 600;
+}
+.liq-ticker-item .liq-side-long {
+  color: #22c55e;
+}
+.liq-ticker-item .liq-side-short {
+  color: #fc1234;
+}
+.liq-ticker-item .liq-zap {
+  color: #fc1234;
+  margin: 0 4px;
+}
+@keyframes liqScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== SECTION HEADERS ===== */
+.section-header {
+  --parallax-y: 0px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: clamp(40px, 6vw, 80px);
+  align-items: end;
+  transform: translateY(var(--parallax-y));
+}
+.section-label {
+  font-size: 11px; font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-label .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.section-title {
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+.section-title em {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+}
+.section-desc {
+  font-size: clamp(14px, 1.2vw, 17px);
+  color: var(--text-dim);
+  line-height: 1.7;
+  max-width: 420px;
+}
+
+/* ===== DASHBOARD SECTION COLORS ===== */
+.section { --accent: #fc1234; }
+
+/* ===== CARD SYSTEM ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.4s, box-shadow 0.4s;
+  margin-bottom: 24px;
+  position: relative;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent 40%, #fc1234 50%, transparent 60%);
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+.card:hover::before {
+  opacity: 1;
+  animation: gradientBorderSweep 2s ease infinite;
+}
+@keyframes gradientBorderSweep {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+.card:hover {
+  border-color: transparent;
+  box-shadow: 0 16px 64px -12px rgba(252, 18, 52, 0.15);
+  transform: translateY(-2px);
+}
+.card-header {
+  padding: 20px 28px 16px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.card-title {
+  font-size: 15px; font-weight: 600;
+  letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 10px;
+}
+.card-badge {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px; border-radius: 6px;
+}
+.card-meta {
+  font-size: 11px; color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.card-body {
+  overflow-x: auto;
+}
+.card-accent-top {
+  height: 2px;
+  background: var(--accent);
+  border-radius: 16px 16px 0 0;
+}
+
+/* ===== TABLE ===== */
+.data-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.data-table th {
+  text-align: left; padding: 12px 28px;
+  font-size: 11px; font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: 12px 28px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr { transition: background 0.15s; }
+.data-table tr:hover { background: var(--card-hover); }
+.pair-name { font-family: var(--font-primary); font-weight: 600; font-size: 13px; }
+.pair-exchange { font-family: var(--font-primary); font-size: 11px; color: var(--text-muted); }
+.pair-exchange a { color: var(--text-muted); transition: color 0.15s; }
+.pair-exchange a:hover { color: #fc1234; }
+.pair-exchange .arrow { opacity: 0.4; margin: 0 3px; }
+
+/* ===== PREDICTION ===== */
+.prediction-row {
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  transition: background 0.15s;
+}
+.prediction-row:hover { background: var(--card-hover); }
+.prediction-row:last-child { border-bottom: none; }
+.prediction-question { font-size: 13px; font-weight: 500; flex: 1; margin-right: 12px; }
+.prediction-meta { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.prediction-odds { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
+.prediction-arb {
+  font-family: var(--font-mono);
+  font-size: 12px; font-weight: 700;
+  color: #fc1234; background: rgba(252,18,52,0.08);
+  padding: 3px 10px; border-radius: 6px;
+}
+
+.prediction-apr {
+  font-family: var(--font-mono);
+  font-size: 12px; font-weight: 700;
+  color: var(--green);
+}
+
+/* ===== POINTS ===== */
+.points-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+}
+.points-item {
+  background: var(--card);
+  padding: 22px 28px;
+  transition: background 0.15s;
+}
+.points-item:hover { background: var(--card-hover); }
+.points-project {
+  font-size: 13px; font-weight: 600;
+  margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.points-tag {
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 2px 7px; border-radius: 4px;
+  background: rgba(252,18,52,0.08); color: #fc1234;
+}
+.points-value {
+  font-family: var(--font-mono);
+  font-size: 24px; font-weight: 700;
+  color: var(--green); margin: 8px 0 6px;
+}
+.points-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+.points-apy { font-family: var(--font-mono); font-size: 11px; color: var(--green); margin-top: 6px; }
+
+/* ===== POINTS CALCULATOR ===== */
+.points-calc {
+  padding: 28px;
+  border-top: 1px solid var(--border);
+}
+.points-calc-title {
+  font-size: 13px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fc1234;
+  margin-bottom: 16px;
+}
+.points-calc-form {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.points-calc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 140px;
+}
+.points-calc-field label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+.points-calc-field input {
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: var(--font-primary);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.points-calc-field input:focus {
+  border-color: #fc1234;
+}
+.points-calc-field input:focus-visible {
+  outline: 2px solid #fc1234;
+  outline-offset: 2px;
+}
+.points-calc-field input::placeholder {
+  color: var(--text-muted);
+}
+.points-calc-btn {
+  background: #fc1234;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  white-space: nowrap;
+}
+.points-calc-btn:hover { background: #e0102e; }
+.points-calc-btn:active { transform: scale(0.97); }
+.points-calc-result {
+  margin-top: 20px;
+  padding: 20px 24px;
+  background: rgba(34,197,94,0.04);
+  border: 1px solid rgba(34,197,94,0.15);
+  border-radius: 12px;
+  display: none;
+}
+.points-calc-result.show { display: block; }
+.points-calc-result-title {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.points-calc-result-value {
+  font-family: var(--font-mono);
+  font-size: 28px; font-weight: 800;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.points-calc-result-msg {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ===== WHALES ===== */
+.whale-row {
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  transition: background 0.15s;
+}
+.whale-row:hover { background: var(--card-hover); }
+.whale-row:last-child { border-bottom: none; }
+.whale-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--elevated);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.whale-info { flex: 1; }
+.whale-addr { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); }
+.whale-action { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.whale-amount { font-family: var(--font-mono); font-size: 13px; font-weight: 600; text-align: right; }
+.whale-amount.buy { color: var(--green); }
+.whale-amount.sell { color: var(--red); }
+.whale-time { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); text-align: right; margin-top: 2px; }
+
+/* ===== NEWS ===== */
+.news-row {
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 14px;
+  transition: background 0.15s;
+}
+.news-row:hover { background: var(--card-hover); }
+.news-row:last-child { border-bottom: none; }
+.news-badge {
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 3px 8px; border-radius: 5px;
+  white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+  background: rgba(252,18,52,0.08); color: #fc1234;
+}
+.news-content { flex: 1; min-width: 0; }
+.news-headline { font-size: 13px; font-weight: 500; line-height: 1.6; margin-bottom: 4px; }
+.news-headline strong { color: var(--green); font-weight: 700; }
+.news-meta {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+}
+.news-token { color: #fc1234; font-weight: 600; }
+.news-gain { color: var(--green); font-weight: 700; }
+.news-time { color: var(--text-muted); }
+
+
+
+/* ===== PARSING STATUS ===== */
+.parsing-bar {
+  padding: 14px 28px;
+  background: var(--elevated);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  font-size: 12px; color: var(--text-muted);
+}
+.parsing-spinner {
+  width: 14px; height: 14px;
+  border: 2px solid var(--border-light);
+  border-top-color: #fc1234;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+.parsing-progress-track {
+  flex: 1; height: 3px;
+  background: var(--bg); border-radius: 2px;
+  overflow: hidden;
+}
+.parsing-progress-fill {
+  height: 100%; border-radius: 2px;
+  background: #fc1234;
+  animation: progressBackward 8s ease-in-out infinite;
+}
+.parsing-label { font-family: var(--font-mono); font-size: 11px; }
+
+
+
+/* ===== DASHBOARD GRID ===== */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.dash-grid .card-full { grid-column: 1 / -1; }
+
+
+
+/* ===== NOTIFICATION TOAST ===== */
+.notif-toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 360px;
+  max-width: calc(100vw - 48px);
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 20px 22px;
+  z-index: 9999;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(120%);
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease;
+}
+.notif-toast.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+.notif-toast.hiding {
+  opacity: 0;
+  transform: translateX(120%);
+  transition: transform 0.4s ease-in, opacity 0.4s ease;
+}
+.notif-close {
+  position: absolute; top: 4px; right: 4px;
+  background: none; border: none;
+  color: var(--text-muted); cursor: pointer;
+  font-size: 18px; line-height: 1;
+  padding: 12px; min-width: 44px; min-height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1; transition: color 0.2s;
+}
+.notif-close:hover { color: var(--text); }
+.notif-toast::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, #fc1234, #ff6b6b, #fc1234);
+  background-size: 200% 100%;
+  animation: alphaBgShift 2s ease infinite;
+}
+.notif-title {
+  font-size: 13px; font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fc1234;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.notif-title .bounce-letter {
+  display: inline-block;
+  animation: bounceLetter 1.2s ease infinite;
+}
+.notif-title .bounce-letter.space {
+  width: 4px;
+}
+.notif-link {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px; font-weight: 600;
+  color: var(--text);
+  word-break: break-all;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(252,18,52,0.04);
+  border: 1px solid rgba(252,18,52,0.1);
+  margin-bottom: 8px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.notif-link:hover {
+  background: rgba(252,18,52,0.08);
+  border-color: rgba(252,18,52,0.2);
+}
+.notif-joke {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.5;
+}
+@keyframes bounceLetter {
+  0%, 100% { transform: translateY(0); color: #fc1234; }
+  15% { transform: translateY(-5px); color: #ff6b6b; }
+  30% { transform: translateY(0); color: #ff4466; }
+  45% { transform: translateY(-2px); color: #fc1234; }
+  60% { transform: translateY(0); }
+}
+/* Glitch line overlay on toast */
+.notif-toast::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(252,18,52,0.02) 2px,
+    rgba(252,18,52,0.02) 4px
+  );
+  pointer-events: none;
+  animation: glitchScanline 4s linear infinite;
+}
+@keyframes glitchScanline {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(20px); }
+}
+
+
+
+/* ===== FOOTER ===== */
+.site-footer {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* WAKE UP particle hero section */
+.footer-wake {
+  position: relative;
+  height: clamp(350px, 45vh, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: default;
+}
+.footer-wake-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.footer-wake-canvas canvas {
+  width: 100%;
+  height: 100%;
+}
+.footer-wake-overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+}
+.footer-wake-title {
+  font-size: clamp(28px, 4vw, 56px);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.footer-wake-title em {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Manifesto section */
+.footer-manifesto {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(48px, 6vw, 100px) clamp(24px, 5vw, 80px);
+  text-align: center;
+}
+.footer-manifesto-text {
+  font-size: clamp(15px, 1.8vw, 18px);
+  color: var(--text-dim);
+  line-height: 2;
+  margin-bottom: 48px;
+}
+.footer-manifesto-text strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.footer-manifesto-text .accent {
+  color: #fc1234;
+  font-weight: 600;
+}
+.footer-manifesto-sign {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 48px;
+}
+
+/* Manifesto language toggle */
+.manifesto-lang-hint {
+  position: fixed;
+  right: 24px;
+  bottom: 220px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.5s, transform 0.5s;
+  pointer-events: none;
+}
+.manifesto-lang-hint.visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.manifesto-lang-bubble {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text-dim);
+  max-width: 220px;
+  text-align: right;
+  line-height: 1.5;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.manifesto-lang-toggle {
+  display: flex;
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.manifesto-lang-btn {
+  background: var(--card);
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.manifesto-lang-btn:hover { color: var(--text); }
+.manifesto-lang-btn.active {
+  background: #fc1234;
+  color: #fff;
+}
+.manifesto-text-ru { display: none; }
+.footer-manifesto.lang-ru .manifesto-text-en { display: none; }
+.footer-manifesto.lang-ru .manifesto-text-ru { display: block; }
+
+@media (max-width: 480px) {
+  .manifesto-lang-hint { right: 12px; bottom: 180px; }
+  .manifesto-lang-bubble { max-width: 180px; font-size: 12px; padding: 10px 12px; }
+}
+
+/* Links row */
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: clamp(24px, 4vw, 64px);
+  padding-bottom: clamp(48px, 6vw, 80px);
+}
+.footer-link {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 12px 24px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.footer-link:hover {
+  color: #fc1234;
+  border-color: rgba(252,18,52,0.4);
+  background: rgba(252,18,52,0.04);
+}
+
+/* Copy line */
+.footer-copy {
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ===== PROMO BLOCK ===== */
+.promo-block {
+  margin-top: 48px;
+  padding: 48px 56px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.04) 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.promo-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: #fc1234;
+  border-radius: 20px 0 0 20px;
+}
+.promo-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #fc1234;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.promo-label .promo-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #fc1234;
+  animation: promoPulse 2s ease-in-out infinite;
+}
+.promo-headline {
+  font-size: clamp(22px, 2.5vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+.promo-headline em {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+}
+.promo-headline .promo-amount {
+  color: var(--green);
+}
+.promo-headline .promo-cost {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+.promo-detail {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  max-width: 600px;
+}
+.promo-detail strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.promo-time {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex; align-items: center; gap: 8px;
+}
+.promo-time .time-value {
+  color: #fc1234;
+  font-weight: 600;
+}
+@keyframes promoPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+@media (max-width: 900px) {
+  .promo-block { padding: 32px 28px; }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes heroFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+@keyframes progressBackward {
+  0% { width: 67%; } 30% { width: 72%; }
+  50% { width: 45%; } 70% { width: 58%; }
+  90% { width: 33%; } 100% { width: 67%; }
+}
+
+@keyframes alphaBgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.25,1,0.5,1), transform 0.8s cubic-bezier(0.25,1,0.5,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.section-header.reveal.visible {
+  transform: translateY(var(--parallax-y, 0px));
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #333; }
+
+/* ===== CURSOR PARTICLE TRAIL ===== */
+#cursorTrail {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+}
+
+/* ===== FILM GRAIN OVERLAY ===== */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9996;
+  pointer-events: none;
+  will-change: transform;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  animation: grainShift 0.3s steps(3) infinite;
+}
+@keyframes grainShift {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-10px, 10px); }
+  66% { transform: translate(5px, -5px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ===== COOKIE CONSENT PARODY ===== */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9998;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(252, 18, 52, 0.2);
+  padding: 32px clamp(24px, 5vw, 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  transform: translateY(100%);
+  animation: cookieSlideUp 0.6s ease 2s forwards;
+}
+@keyframes cookieSlideUp {
+  to { transform: translateY(0); }
+}
+.cookie-banner.hidden {
+  animation: cookieSlideDown 0.4s ease forwards;
+}
+@keyframes cookieSlideDown {
+  to { transform: translateY(100%); opacity: 0; }
+}
+.cookie-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  max-width: 720px;
+}
+.cookie-text strong {
+  color: #fc1234;
+  font-weight: 600;
+}
+.cookie-btn {
+  flex-shrink: 0;
+  background: #fc1234;
+  color: #fff;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.cookie-btn:hover {
+  background: #e0102e;
+  transform: scale(1.03);
+}
+
+/* ===== AMBIENT BACKGROUND PARTICLES ===== */
+#ambientParticles {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+#glowParticles {
+  position: fixed;
+  inset: 0;
+  z-index: 101;
+  pointer-events: none;
+}
+
+/* ===== GLITCH EFFECT ON SECTION TITLES ===== */
+.section-title.glitch-reveal {
+  position: relative;
+  animation: glitchText 0.4s steps(2) forwards;
+}
+.section-title.glitch-reveal::before,
+.section-title.glitch-reveal::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.section-title.glitch-reveal::before {
+  color: #fc1234;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+  animation: glitchSlice1 0.4s steps(2) forwards;
+}
+.section-title.glitch-reveal::after {
+  color: #00f0ff;
+  clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
+  animation: glitchSlice2 0.4s steps(2) forwards;
+}
+@keyframes glitchText {
+  0% { opacity: 0; transform: skewX(-5deg); }
+  25% { opacity: 1; transform: skewX(3deg); }
+  50% { transform: skewX(-2deg); }
+  75% { transform: skewX(1deg); }
+  100% { opacity: 1; transform: skewX(0); }
+}
+@keyframes glitchSlice1 {
+  0% { transform: translateX(-8px); opacity: 0.8; }
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(-3px); }
+  100% { transform: translateX(0); opacity: 0; }
+}
+@keyframes glitchSlice2 {
+  0% { transform: translateX(8px); opacity: 0.8; }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(2px); }
+  100% { transform: translateX(0); opacity: 0; }
+}
+
+/* ===== AI SENTIMENT SECTION ===== */
+.sentiment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 32px;
+}
+.gauge-svg {
+  width: 280px;
+  height: 160px;
+}
+.gauge-label {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 12px;
+  font-family: var(--font-mono);
+}
+
+.gauge-value {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--green);
+  margin-top: 8px;
+}
+.gauge-mood {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fc1234;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.sentiment-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+.sentiment-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.sentiment-metric-label {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.sentiment-metric-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green);
+  font-family: var(--font-mono);
+}
+.sentiment-metric-value.red { color: #fc1234; }
+
+/* ===== PREMIUM UPGRADE MODAL ===== */
+.premium-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.premium-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.premium-overlay.show .premium-modal {
+  animation: premiumPop 0.4s ease;
+}
+.premium-modal {
+  background: var(--card);
+  border: 1px solid #fc1234;
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 520px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 80px rgba(252, 18, 52, 0.2);
+}
+@keyframes premiumPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.premium-close {
+  position: absolute; top: 12px; right: 16px;
+  background: none; border: none;
+  color: var(--text-muted); cursor: pointer;
+  font-size: 24px; padding: 8px;
+  min-width: 44px; min-height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.2s;
+}
+.premium-close:hover { color: var(--text); }
+.premium-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #fc1234, #ff6644);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 16px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+.premium-title {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.premium-price {
+  font-size: 48px;
+  font-weight: 800;
+  color: #fc1234;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+}
+.premium-price-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+.premium-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 28px;
+}
+.premium-features li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.premium-features li::before {
+  content: '\2713';
+  color: var(--green);
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.premium-cta {
+  display: inline-block;
+  background: linear-gradient(135deg, #fc1234, #ff4466);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px 48px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.premium-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(252, 18, 52, 0.3);
+}
+.premium-disclaimer {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 16px;
+  font-style: italic;
+}
+
+/* ===== LIGHT MODE HORROR ===== */
+body.light-mode {
+  background: #fff !important;
+  color: #000 !important;
+  font-family: 'Comic Sans MS', 'Papyrus', cursive !important;
+}
+body.light-mode .navbar,
+body.light-mode .card,
+body.light-mode .section,
+body.light-mode .site-footer {
+  background: #fff !important;
+  border-color: #ff69b4 !important;
+  color: #000 !important;
+}
+body.light-mode .section-title,
+body.light-mode .card-title {
+  color: #ff00ff !important;
+  font-family: 'Comic Sans MS', cursive !important;
+  text-shadow: 2px 2px 0 #ff69b4;
+  transform: rotate(-1deg);
+}
+body.light-mode .card {
+  border: 3px dashed #ff00ff !important;
+  border-radius: 0 !important;
+  transform: rotate(0.5deg);
+}
+body.light-mode .card:nth-child(even) { transform: rotate(-0.5deg); }
+body.light-mode .promo-block {
+  background: #ffff00 !important;
+  border: 3px dotted #ff0000 !important;
+}
+body.light-mode .liq-ticker { display: none !important; }
+body.light-mode #ambientParticles,
+body.light-mode #cursorTrail,
+body.light-mode #glowParticles,
+body.light-mode .grain-overlay { display: none !important; }
+
+.light-mode-warning {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: #fff;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+}
+body.light-mode .light-mode-warning { display: flex !important; }
+.light-mode-warning h2 {
+  font-size: clamp(28px, 5vw, 56px);
+  font-weight: 900;
+  color: #ff0000;
+  font-family: 'Comic Sans MS', cursive;
+  margin-bottom: 20px;
+  animation: lmwShake 0.3s infinite;
+  text-shadow: 3px 3px 0 #ff69b4;
+}
+.light-mode-warning p {
+  font-size: clamp(14px, 2.5vw, 20px);
+  color: #333;
+  margin-bottom: 30px;
+  max-width: 500px;
+  font-family: 'Comic Sans MS', cursive;
+}
+.light-mode-warning button {
+  background: #000;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 16px 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-primary);
+}
+@keyframes lmwShake {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+/* Theme toggle button in navbar */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border-light);
+  color: var(--text-dim);
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: border-color 0.2s, color 0.2s;
+}
+.theme-toggle:hover { border-color: var(--text-muted); color: var(--text); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .section-header {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .dash-grid { grid-template-columns: 1fr; }
+  .points-grid { grid-template-columns: 1fr; }
+  .navbar-links { gap: 20px; }
+  .navbar-links a { font-size: 11px; }
+  .footer-links { flex-direction: column; align-items: center; gap: 12px; }
+  .footer-link { width: 200px; text-align: center; }
+  .prediction-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .prediction-meta { width: 100%; flex-wrap: wrap; }
+  .news-row { flex-direction: column; align-items: flex-start; }
+  .news-meta { width: 100%; }
+  .sentiment-grid { grid-template-columns: 1fr; }
+  .gauge-svg { width: 220px; height: 130px; }
+  .api-status { display: none; }
+  .cookie-banner { flex-direction: column; text-align: center; padding: 24px; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 42px; }
+  .section-title { font-size: 32px; }
+  .points-calc-form { flex-direction: column; }
+  .points-calc-btn { width: 100%; }
+  .whale-row { flex-wrap: wrap; }
+}
+
+/* Focus styles for keyboard navigation */
+.points-calc-btn:focus-visible,
+.notif-close:focus-visible,
+.footer-link:focus-visible,
+.navbar-links a:focus-visible,
+.theme-toggle:focus-visible,
+.premium-close:focus-visible,
+.premium-cta:focus-visible,
+.manifesto-lang-btn:focus-visible,
+#lightModeBack:focus-visible {
+  outline: 2px solid #fc1234;
+  outline-offset: 2px;
+}
+
+/* ===== TESTIMONIALS CAROUSEL ===== */
+.testimonials-section {
+  padding: clamp(60px, 10vw, 120px) 0;
+  overflow: hidden;
+}
+.testimonials-section .section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 60px);
+}
+.testimonials-label {
+  font-size: 11px; font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.testimonials-heading {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 48px;
+}
+.testimonials-track-wrapper {
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.testimonials-track {
+  display: flex;
+  gap: 24px;
+  animation: testimonialScroll 60s linear infinite;
+  width: max-content;
+}
+.testimonials-track:hover {
+  animation-play-state: paused;
+}
+.testimonials-track-reverse {
+  animation: testimonialScrollReverse 55s linear infinite;
+}
+.testimonials-track-reverse:hover {
+  animation-play-state: paused;
+}
+@keyframes testimonialScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes testimonialScrollReverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.testimonial-card {
+  flex-shrink: 0;
+  width: 340px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.testimonial-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-4px);
+}
+.testimonial-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.testimonial-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-light);
+  background: var(--card);
+}
+.testimonial-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+}
+.testimonial-handle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.testimonial-profit {
+  font-size: 13px;
+  color: #22c55e;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.testimonial-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.testimonial-text .highlight {
+  color: #fc1234;
+  font-weight: 600;
+}
+.testimonial-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 14px;
+  opacity: 0.6;
+}
+@media (max-width: 768px) {
+  .testimonial-card { width: 290px; padding: 22px; }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  #cursorTrail, #ambientParticles, #glowParticles, .grain-overlay { display: none !important; }
+}
+
+/* ===== MOBILE BLOCKER ===== */
+.mobile-blocker {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 28px;
+  gap: 24px;
+}
+.mobile-blocker-icon {
+  font-size: 64px;
+  line-height: 1;
+}
+.mobile-blocker-title {
+  font-family: var(--font-primary);
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.mobile-blocker-title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: #fc1234;
+}
+.mobile-blocker-text {
+  font-family: var(--font-primary);
+  font-size: 15px;
+  color: #888;
+  line-height: 1.6;
+  max-width: 340px;
+}
+.mobile-blocker-text strong {
+  color: #fc1234;
+}
+.mobile-blocker-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #333;
+  margin-top: 24px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+@media (max-width: 768px) {
+  .mobile-blocker { display: flex; }
+  #loader, .navbar, .api-status, main, footer, .site-footer,
+  .notif-toast, .premium-overlay, .light-mode-warning,
+  #cursorTrail, #ambientParticles, #glowParticles, .grain-overlay,
+  .manifesto-lang-hint, .cookie-banner { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE BLOCKER -->
+<div class="mobile-blocker">
+  <div class="mobile-blocker-icon">&#128580;</div>
+  <div class="mobile-blocker-title">Bro...</div>
+  <div class="mobile-blocker-text">
+    You're really using a <strong>phone</strong> for crypto sites?
+    <br><br>
+    Wtf...
+    <br><br>
+    <strong style="font-size: 18px;">A PARSER, TOO?!</strong>
+    <br><br>
+    No, you can't live like this. Go open it on a PC. Be a human.
+  </div>
+  <div class="mobile-blocker-hint">min. screen width: 769px</div>
+</div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-spinner"></div>
+  <div class="loader-text" id="loaderText">Connecting to 22 exchanges...</div>
+  <div class="loader-progress"><div class="loader-progress-fill" id="loaderFill"></div></div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-logo">Ultra<span>Mega</span>MXWParser</div>
+  <div class="navbar-links">
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light/dark theme">white theme</button>
+    <a href="https://x.com/MaxWayld" target="_blank" rel="noopener noreferrer">made by MaxWayld</a>
+  </div>
+</nav>
+
+<!-- API STATUS BAR -->
+<div class="api-status" id="apiStatus">
+  <span class="api-status-item"><span class="api-dot live"></span>Binance</span>
+  <span class="api-status-item"><span class="api-dot live"></span>Hyperliquid</span>
+  <span class="api-status-item"><span class="api-dot live"></span>Polymarket</span>
+  <span class="api-status-item"><span class="api-dot live"></span>Arkham</span>
+  <span class="api-status-item"><span class="api-dot live"></span>Nansen</span>
+  <span class="api-status-item"><span class="api-dot live"></span>ChatGPT</span>
+  <span class="api-status-item"><span class="api-dot live"></span>your mom's portfolio</span>
+</div>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-canvas-container" id="hero-canvas"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Turning chaos<br>into <em id="heroRotatingWord">Alpha</em></h1>
+
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+<div class="liq-ticker"><div class="liq-ticker-track"></div></div>
+
+<!-- ========================================== -->
+<!-- SECTION 1: FUNDING RATE ARBITRAGE -->
+<!-- ========================================== -->
+<section class="section section--funding" id="funding">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">
+          <span class="dot" style="background: #fc1234;"></span>
+          Live Data
+        </div>
+        <h2 class="section-title">Funding Rate<br><em>Arbitrage</em></h2>
+      </div>
+      <div>
+        <p class="section-desc">Cross-exchange funding rate scanner monitoring 22+ perpetual DEXs in real-time. Identifies delta-neutral arbitrage opportunities with automated spread calculation and APR projections.</p>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card card-full reveal reveal-delay-1">
+        <div class="card-accent-top"></div>
+        <div class="card-header">
+          <div class="card-title">
+            Funding Rate Arbitrage
+            <span class="card-badge" style="background: rgba(252,18,52,0.08); color: #fc1234;">LIVE</span>
+          </div>
+          <div class="card-meta" id="fundingUpdateTime">Updated: just now</div>
+        </div>
+        <div class="card-body">
+          <table class="data-table">
+            <thead>
+              <tr><th>Pair</th><th>Long</th><th>Short</th><th>Spread</th><th>APR</th></tr>
+            </thead>
+            <tbody id="fundingTable"></tbody>
+          </table>
+        </div>
+        <div class="parsing-bar">
+          <div class="parsing-spinner"></div>
+          <div class="parsing-progress-track"><div class="parsing-progress-fill"></div></div>
+          <span class="parsing-label">Parsing 1669 exchanges...</span>
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <!-- PROMO BLOCK: Funding -->
+    <div class="promo-block reveal" id="promo-funding">
+      <div class="promo-label"><span class="promo-dot"></span> Missed Opportunity</div>
+      <div class="promo-headline">
+        PENDLE funding rate arb between Hyperliquid and Backpack yielded <span class="promo-amount" id="promo-funding-amount">$4,453</span>
+      </div>
+      <div class="promo-detail">
+        Our parser detected a <strong>0.087% funding rate spread</strong> on PENDLE-PERP between Hyperliquid and Backpack. By going long on the negative-rate venue and short on the positive, this delta-neutral position captured the full spread over 3 funding periods.
+      </div>
+      <div class="promo-time">
+        Detected today at <span class="time-value" id="promo-funding-time">14:32 UTC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="liq-ticker"><div class="liq-ticker-track"></div></div>
+
+<!-- ========================================== -->
+<!-- SECTION 2: PREDICTION MARKET SCANNER -->
+<!-- ========================================== -->
+<section class="section section--prediction" id="predictions">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">
+          <span class="dot" style="background: #fc1234;"></span>
+          Guaranteed*
+        </div>
+        <h2 class="section-title">Prediction<br><em>Markets</em></h2>
+      </div>
+      <div>
+        <p class="section-desc">Aggregating odds from Polymarket, Kalshi, PredictFun, Myriad, and Limitless. Identifies cross-platform arbitrage spreads with automated APR calculation for market-neutral strategies.</p>
+      </div>
+    </div>
+
+    <div class="card reveal reveal-delay-1">
+      <div class="card-accent-top"></div>
+      <div class="card-header">
+        <div class="card-title">
+          Prediction Market Scanner
+           <span class="card-badge" style="background: rgba(252,18,52,0.08); color: #fc1234;">LIVE</span>
+        </div>
+        <div class="card-meta">5 platforms &middot; Real-time odds &middot; Auto-arb detection</div>
+      </div>
+      <div class="card-body" id="predictionBody"></div>
+      <div class="parsing-bar">
+        <div class="parsing-spinner"></div>
+        <div class="parsing-progress-track"><div class="parsing-progress-fill"></div></div>
+        <span class="parsing-label">Scanning Polymarket, Kalshi, PredictFun, Myriad, Limitless...</span>
+      </div>
+    </div>
+
+
+
+    <!-- PROMO BLOCK: Predictions -->
+    <div class="promo-block reveal" id="promo-prediction">
+      <div class="promo-label"><span class="promo-dot"></span> Detected Arbitrage</div>
+      <div class="promo-headline">
+        Fed rate cut prediction spread netted <span class="promo-amount" id="promo-prediction-amount">$1,847</span> in risk-free arb
+      </div>
+      <div class="promo-detail">
+        Our scanner found a <strong>3.8% spread</strong> on "Fed rate cut in March" between Polymarket (62.0%) and Kalshi (58.2%). By buying YES on Kalshi and selling on Polymarket, this <strong>market-neutral position</strong> captured the spread on resolution.
+      </div>
+      <div class="promo-time">
+        Resolved today at <span class="time-value" id="promo-prediction-time">09:17 UTC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="liq-ticker"><div class="liq-ticker-track"></div></div>
+
+<!-- ========================================== -->
+<!-- SECTION 3: POINTS FARMING CALCULATOR -->
+<!-- ========================================== -->
+<section class="section section--points" id="points">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">
+          <span class="dot" style="background: #fc1234;"></span>
+          Degen Mode
+        </div>
+        <h2 class="section-title">Points<br><em>Farming</em></h2>
+      </div>
+      <div>
+        <p class="section-desc">Proprietary point valuation model that factors in hopium levels, Twitter sentiment, and the phase of the moon. Accuracy: approximately 0%.</p>
+      </div>
+    </div>
+
+    <div class="card reveal reveal-delay-1">
+      <div class="card-accent-top"></div>
+      <div class="card-header">
+        <div class="card-title">
+          Points Farming Calculator
+          <span class="card-badge" style="background: rgba(252,18,52,0.08); color: #fc1234;">DEGEN MODE</span>
+        </div>
+        <div class="card-meta">Methodology: vibes &middot; Last calibrated: never</div>
+      </div>
+      <div class="card-body">
+        <div class="points-grid" id="pointsGrid"></div>
+      </div>
+      <div class="points-calc">
+        <div class="points-calc-title">Estimate Your Airdrop Value</div>
+        <div class="points-calc-form">
+          <div class="points-calc-field">
+            <label for="calcProject">Project Name</label>
+            <input type="text" id="calcProject" placeholder="e.g. Lighter" autocomplete="off">
+          </div>
+          <div class="points-calc-field">
+            <label for="calcPoints">Your Points</label>
+            <input type="number" id="calcPoints" placeholder="e.g. 1500" min="1" autocomplete="off">
+          </div>
+          <button class="points-calc-btn" id="calcBtn" type="button">Calculate</button>
+        </div>
+        <div class="points-calc-result" id="calcResult">
+          <div class="points-calc-result-title" id="calcResultTitle"></div>
+          <div class="points-calc-result-value" id="calcResultValue"></div>
+          <div class="points-calc-result-msg" id="calcResultMsg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROMO BLOCK: Points -->
+    <div class="promo-block reveal" id="promo-points">
+      <div class="promo-label"><span class="promo-dot"></span> Airdrop Alert</div>
+      <div class="promo-headline">
+        Users who farmed <em>Lighter</em> points using our calculator received <span class="promo-amount" id="promo-points-amount">$47,291</span>
+      </div>
+      <div class="promo-detail">
+        By following our <strong>vibes-based methodology</strong>, early farmers accumulated 12,847 points before the snapshot. Those who trusted the process received the maximum tier airdrop. Those who didn't are still coping.
+      </div>
+      <div class="promo-time">
+        Snapshot detected at <span class="time-value" id="promo-points-time">18:05 UTC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="liq-ticker"><div class="liq-ticker-track"></div></div>
+
+<!-- ========================================== -->
+<!-- SECTION 4: WHALE TRACKER -->
+<!-- ========================================== -->
+<section class="section section--whales" id="whales">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">
+          <span class="dot" style="background: #fc1234;"></span>
+          Real-Time
+        </div>
+        <h2 class="section-title">Whale<br><em>Tracker</em></h2>
+      </div>
+      <div>
+        <p class="section-desc">Tracking on-chain whale movements in real-time. Minimum whale size: $3.50. We take this very seriously.</p>
+      </div>
+    </div>
+
+    <div class="card reveal reveal-delay-1">
+      <div class="card-accent-top"></div>
+      <div class="card-header">
+        <div class="card-title">
+          Whale Tracker
+          <span class="card-badge" style="background: rgba(252,18,52,0.08); color: #fc1234;">REAL-TIME</span>
+        </div>
+        <div class="card-meta">Min. whale size: $3.50</div>
+      </div>
+      <div class="card-body" id="whaleBody"></div>
+    </div>
+
+
+
+    <!-- PROMO BLOCK: Whales -->
+    <div class="promo-block reveal" id="promo-whales">
+      <div class="promo-label"><span class="promo-dot"></span> Copy Trade Result</div>
+      <div class="promo-headline">
+        Copying whale <span class="promo-cost">0xdead...b33f</span> turned <span class="promo-cost">$50</span> into <span class="promo-amount" id="promo-whales-amount">$2,690</span>
+      </div>
+      <div class="promo-detail">
+        Our tracker detected <strong>0xdead...b33f</strong> buying 0.0003 ETH on Uniswap. Users who immediately copy-traded this <strong>whale movement</strong> with 100x leverage caught a 53x pump on the micro-cap token they were accumulating. Coincidence? We think not.
+      </div>
+      <div class="promo-time">
+        Whale spotted today at <span class="time-value" id="promo-whales-time">21:38 UTC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="liq-ticker"><div class="liq-ticker-track"></div></div>
+
+<!-- ========================================== -->
+<!-- SECTION 5: FLIPPING MEMES BY THE NEWS -->
+<!-- ========================================== -->
+<section class="section section--news" id="news">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">
+          <span class="dot" style="background: #fc1234;"></span>
+          Breaking
+        </div>
+        <h2 class="section-title">Flipping Memes<br>by the <em>News</em></h2>
+      </div>
+      <div>
+        <p class="section-desc">Real-time analysis of world events translated into leveraged memecoin positions. Our AI reads the headlines so you don't have to.</p>
+      </div>
+    </div>
+
+    <div class="card reveal reveal-delay-1">
+      <div class="card-accent-top"></div>
+      <div class="card-header">
+        <div class="card-title">
+          Meme News Terminal
+          <span class="card-badge" style="background: rgba(252,18,52,0.08); color: #fc1234;">BREAKING</span>
+        </div>
+        <div class="card-meta" id="newsUpdateTime">Updated: just now</div>
+      </div>
+      <div class="card-body" id="newsBody"></div>
+      <div class="parsing-bar">
+        <div class="parsing-spinner"></div>
+        <div class="parsing-progress-track"><div class="parsing-progress-fill"></div></div>
+        <span class="parsing-label">Scanning X, Telegram, my imagination...</span>
+      </div>
+    </div>
+
+    <!-- PROMO BLOCK: News -->
+    <div class="promo-block reveal" id="promo-news">
+      <div class="promo-label"><span class="promo-dot"></span> Meme Flip Result</div>
+      <div class="promo-headline">
+        Flipping <em>$PUTINCHAIN</em> on the Putin-Trump rumor netted <span class="promo-amount" id="promo-news-amount">$6,942</span>
+      </div>
+      <div class="promo-detail">
+        Our news scanner detected the Putin-Trump headline <strong>47 seconds</strong> before Crypto Twitter. Users who aped into the related memecoin with <strong>50x leverage</strong> caught an x120 pump before the debunk. The token is now worth zero but profits were taken.
+      </div>
+      <div class="promo-time">
+        Headline detected at <span class="time-value" id="promo-news-time">03:12 UTC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="liq-ticker"><div class="liq-ticker-track"></div></div>
+
+<!-- ========================================== -->
+<!-- SECTION 6: AI SENTIMENT + FEAR & GREED -->
+<!-- ========================================== -->
+<section class="section section--sentiment" id="sentiment">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">
+          <span class="dot" style="background: #fc1234;"></span>
+          AI-Powered
+        </div>
+        <h2 class="section-title">Market<br><em>Sentiment</em></h2>
+      </div>
+      <div>
+        <p class="section-desc">Our proprietary AI analyzes every tweet, Discord message, and gut feeling within a 50-mile radius. Accuracy: vibes-based.</p>
+      </div>
+    </div>
+
+    <div class="card reveal reveal-delay-1">
+      <div class="card-accent-top"></div>
+      <div class="card-header">
+        <div class="card-title">
+          Fear & Greed Index
+          <span class="card-badge" style="background: rgba(34,197,94,0.08); color: var(--green);">MAXIMUM GREED</span>
+        </div>
+        <div class="card-meta">Updated: every vibe shift</div>
+      </div>
+      <div class="card-body">
+        <div class="sentiment-grid">
+          <div class="gauge-container" id="gaugeContainer">
+            <svg class="gauge-svg" viewBox="0 0 280 160" id="gaugeSvg">
+              <defs>
+                <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#ef4444"/>
+                  <stop offset="25%" style="stop-color:#f97316"/>
+                  <stop offset="50%" style="stop-color:#eab308"/>
+                  <stop offset="75%" style="stop-color:#22c55e"/>
+                  <stop offset="100%" style="stop-color:#00ff88"/>
+                </linearGradient>
+              </defs>
+              <path d="M 30 140 A 110 110 0 0 1 250 140" fill="none" stroke="url(#gaugeGrad)" stroke-width="16" stroke-linecap="round"/>
+              <line id="gaugeNeedle" x1="140" y1="140" x2="140" y2="40" stroke="#fc1234" stroke-width="3" stroke-linecap="round" transform="rotate(-85, 140, 140)"/>
+              <circle cx="140" cy="140" r="6" fill="#fc1234"/>
+            </svg>
+            <div class="gauge-value" id="gaugeValue">97</div>
+            <div class="gauge-mood" id="gaugeMood">EXTREME GREED</div>
+            <div class="gauge-label">Composite Sentiment Score</div>
+          </div>
+          <div class="sentiment-metrics" id="sentimentMetrics">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="liq-ticker"><div class="liq-ticker-track"></div></div>
+
+<!-- ========================================== -->
+<!-- TESTIMONIALS -->
+<!-- ========================================== -->
+<section class="testimonials-section reveal">
+  <div class="section-inner">
+    <div class="testimonials-label">Social Proof</div>
+    <h2 class="testimonials-heading">Real traders. Real profits. <span style="color: var(--text-muted); font-weight: 400; font-size: 0.6em;">Allegedly.</span></h2>
+    <div class="testimonials-track-wrapper">
+      <div class="testimonials-track" id="testimonialsTrack"></div>
+    </div>
+    <div class="testimonials-track-wrapper" style="margin-top: 24px;">
+      <div class="testimonials-track testimonials-track-reverse" id="testimonialsTrack2"></div>
+    </div>
+  </div>
+</section>
+
+<div class="liq-ticker"><div class="liq-ticker-track"></div></div>
+
+</main>
+
+<!-- ========================================== -->
+<!-- FOOTER -->
+<!-- ========================================== -->
+<footer class="site-footer">
+
+  <!-- WAKE UP particle text -->
+  <div class="footer-wake">
+    <div class="footer-wake-canvas" id="footerWakeCanvas"></div>
+    <div class="footer-wake-overlay">
+      <div class="footer-wake-title">It's all bullshit. <em>Absolutely.</em></div>
+    </div>
+  </div>
+
+  <!-- Manifesto -->
+  <div class="footer-manifesto" id="footerManifesto">
+    <div class="manifesto-text-en">
+      <p class="footer-manifesto-text">
+        Stop. Every number you just scrolled past is <strong>completely made up</strong>. Every funding rate, every prediction, every signal, every whale alert, every AI sentiment score - <span class="accent">none of it is real</span>. This entire site is a social experiment.
+      </p>
+      <p class="footer-manifesto-text">
+        I built this in <strong>a couple of hours</strong>. That's the point. I could have built the exact same thing without the jokes - real-looking charts, professional copy, a paid "premium tier," a $2,000 course on "how to find alpha." And people would have paid for it. That's not a flex. <em>That should genuinely scare you.</em>
+      </p>
+      <p class="footer-manifesto-text">
+        Right now, in this market, someone is building a site exactly like this one - except they're not laughing. They're charging $500/month for "signals" that come from the same place mine do: <strong>nowhere</strong>. They're selling courses on alpha that doesn't exist, running groups that front-run their own members, and wrapping it all in a design that looks just professional enough to feel real.
+      </p>
+      <p class="footer-manifesto-text">
+        The tools to build convincing scams have never been more accessible. Anyone with a laptop can now create something that looks like a million-dollar product in an afternoon. The barrier between "legitimate service" and "elaborate scam" is now just <strong>intent</strong>. So please - question everything. Check twice. If someone promises guaranteed returns, they're lying. If someone's alpha is so good, ask yourself why they're selling it to you instead of using it themselves.
+      </p>
+      <p class="footer-manifesto-sign">
+        Stay sharp out there. This was built with love, sarcasm, and genuine concern for your wallet. <span class="accent">GL HF. DYOR NFA BTW.</span>
+      </p>
+    </div>
+
+    <div class="manifesto-text-ru" lang="ru">
+      <p class="footer-manifesto-text">
+        Стоп. Каждая цифра, которую ты только что пролистал - <strong>полностью выдумана</strong>. Каждый фандинг рейт, каждый прогноз, каждый сигнал, каждый whale alert, каждый AI-анализ настроений - <span class="accent">ничего из этого не существует</span>. Весь этот сайт - социальный эксперимент.
+      </p>
+      <p class="footer-manifesto-text">
+        Я собрал это за <strong>пару часов</strong>. В этом и суть. Я мог бы сделать то же самое без шуток - с реальными графиками, профессиональными текстами, платным "premium" тарифом, курсом за $2,000 про "как находить альфу." И люди бы заплатили. Это не понты. <em>Это должно тебя реально напрячь.</em>
+      </p>
+      <p class="footer-manifesto-text">
+        Прямо сейчас, на этом рынке, кто-то строит точно такой же сайт - только он не шутит. Он берёт $500/месяц за "сигналы", которые берутся оттуда же, откуда и мои: <strong>из ниоткуда</strong>. Он продаёт курсы по альфе, которой не существует, ведёт группы, которые фронтраннят своих же участников, и заворачивает это в дизайн, который выглядит достаточно солидно, чтобы казаться настоящим.
+      </p>
+      <p class="footer-manifesto-text">
+        Инструменты для создания убедительных скамов никогда не были такими доступными. Любой человек с ноутбуком может за полдня создать нечто, похожее на продукт за миллион долларов. Граница между "легитимным сервисом" и "продуманным скамом" теперь - только <strong>намерение</strong>. Поэтому, пожалуйста - подвергай всё сомнению. Проверяй дважды. Если кто-то обещает гарантированную доходность - он врёт. Если чья-то альфа настолько хороша, спроси себя: почему он продаёт её тебе, а не пользуется сам?
+      </p>
+      <p class="footer-manifesto-sign">
+        Будь внимателен. Это было сделано с любовью, сарказмом и искренней заботой о твоём кошельке. <span class="accent">GL HF. DYOR NFA BTW.</span>
+      </p>
+    </div>
+
+    <div class="footer-links">
+      <a href="https://x.com/MaxWayld" target="_blank" rel="noopener noreferrer" class="footer-link">My X</a>
+      <a href="https://t.me/maxycrypto" target="_blank" rel="noopener noreferrer" class="footer-link">My TG</a>
+      <a href="https://t.me/hodlpass_bot?start=mxw_community_beta_fu" target="_blank" rel="noopener noreferrer" class="footer-link">My Community</a>
+    </div>
+  </div>
+
+  <div class="footer-copy">UltraMegaMXWParser &copy; 2026</div>
+
+</footer>
+
+<!-- MANIFESTO LANGUAGE HINT -->
+<div class="manifesto-lang-hint" id="manifestoLangHint">
+  <div class="manifesto-lang-bubble" id="manifestoLangBubble"></div>
+  <div class="manifesto-lang-toggle">
+    <button class="manifesto-lang-btn active" data-lang="en" type="button">EN</button>
+    <button class="manifesto-lang-btn" data-lang="ru" type="button">RU</button>
+  </div>
+</div>
+
+<!-- NOTIFICATION TOAST -->
+<div class="notif-toast" id="notifToast">
+  <button class="notif-close" id="notifClose" aria-label="Close notification">&times;</button>
+  <div class="notif-title" id="notifTitle"></div>
+  <a class="notif-link" id="notifLink" href="#" target="_blank" rel="noopener noreferrer">loading...</a>
+  <div class="notif-joke" id="notifJoke">pls ser, my family needs this</div>
+</div>
+
+<!-- PREMIUM UPGRADE MODAL -->
+<div class="premium-overlay" id="premiumOverlay" role="dialog" aria-modal="true">
+  <div class="premium-modal">
+    <button class="premium-close" id="premiumClose" aria-label="Close">&times;</button>
+    <div class="premium-badge">LIMITED TIME OFFER</div>
+    <div class="premium-title">ULTRAMEGA <em>PRO</em></div>
+    <div class="premium-price">$999<span style="font-size:20px">/mo</span></div>
+    <div class="premium-price-sub">billed annually at $11,988 (no refunds, ever)</div>
+    <ul class="premium-features">
+      <li>Access to our proprietary vibes-based model</li>
+      <li>Unlimited copium supply</li>
+      <li>Private Discord where we all pretend to be profitable</li>
+      <li>AI-generated alpha that's wrong 97% of the time</li>
+      <li>Exclusive access to next rug pull (early entry)</li>
+      <li>Personal whale tracker (tracks whales with $3+)</li>
+      <li>24/7 support (we reply "WAGMI" to everything)</li>
+    </ul>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer" class="premium-cta" id="premiumCta">SUBSCRIBE NOW</a>
+    <div class="premium-disclaimer">* None of this is real. You will receive nothing. Your money will be gone forever. This is not financial advice because there is no financial product.</div>
+  </div>
+</div>
+
+<!-- LIGHT MODE WARNING -->
+<div class="light-mode-warning" id="lightModeWarning" role="alertdialog" aria-modal="true">
+  <h2>WHAT HAVE YOU DONE?!</h2>
+  <p>Light mode on a crypto site? This is a crime against humanity. Your eyes, your portfolio, and your dignity are all at risk. Switch back IMMEDIATELY.</p>
+  <button id="lightModeBack" type="button">OK I'M SORRY, TAKE ME BACK</button>
+</div>
+
+<!-- GLOBAL VISUAL LAYERS -->
+<canvas id="cursorTrail"></canvas>
+<canvas id="ambientParticles"></canvas>
+<canvas id="glowParticles"></canvas>
+<div class="grain-overlay"></div>
+
+<!-- COOKIE CONSENT PARODY -->
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie consent">
+  <div class="cookie-text">
+    We use cookies. Actually, we don't. We use <strong>hopium</strong>, <strong>copium</strong>, and pure <strong>FOMO</strong>. By scrolling, you agree that none of this is financial advice and that you probably should have listened to your mom about getting a real job.
+  </div>
+  <button class="cookie-btn" id="cookieAccept" type="button">I Accept My Fate</button>
+</div>
+
+<!-- ========================================== -->
+<!-- THREE.JS HERO -->
+<!-- ========================================== -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ============================================
+// 3D PARTICLE HERO - Interactive blob
+// ============================================
+
+function initHero() {
+  const container = document.getElementById('hero-canvas');
+  const W = container.clientWidth;
+  const H = container.clientHeight;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
+  camera.position.set(0, 0, 9);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 1);
+  container.appendChild(renderer.domElement);
+
+  // --- Sample points from text rendered on a hidden canvas ---
+  function sampleTextPoints(text, targetCount, canvasW, canvasH) {
+    const c = document.createElement('canvas');
+    c.width = canvasW;
+    c.height = canvasH;
+    const ctx = c.getContext('2d');
+
+    // Draw text - each character separately with spacing for readability
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const fontSize = Math.floor(canvasH * 0.6);
+    ctx.font = `900 ${fontSize}px "Inter", Arial, sans-serif`;
+    // Draw each character with extra spacing
+    const chars = text.split('');
+    const charWidths = chars.map(ch => ctx.measureText(ch).width);
+    const spacing = fontSize * 0.15; // extra gap between letters
+    const totalW = charWidths.reduce((a, b) => a + b, 0) + spacing * (chars.length - 1);
+    let curX = (canvasW - totalW) / 2;
+    for (let i = 0; i < chars.length; i++) {
+      ctx.fillText(chars[i], curX + charWidths[i] / 2, canvasH / 2);
+      curX += charWidths[i] + spacing;
+    }
+
+    // Sample pixel data
+    const imageData = ctx.getImageData(0, 0, canvasW, canvasH);
+    const pixels = imageData.data;
+    const filledPixels = [];
+
+    for (let y = 0; y < canvasH; y += 2) {
+      for (let x = 0; x < canvasW; x += 2) {
+        const idx = (y * canvasW + x) * 4;
+        if (pixels[idx] > 128) {
+          filledPixels.push({ x, y });
+        }
+      }
+    }
+
+    // Randomly sample from filled pixels
+    const points = [];
+    for (let i = 0; i < targetCount; i++) {
+      const p = filledPixels[Math.floor(Math.random() * filledPixels.length)];
+      if (p) {
+        // Map canvas coords to 3D space centered at origin
+        const nx = (p.x / canvasW - 0.5) * 12;  // width in world units (2x bigger)
+        const ny = -(p.y / canvasH - 0.5) * 6;  // height in world units (2x bigger)
+        const nz = (Math.random() - 0.5) * 0.4; // slight depth
+        points.push(nx, ny, nz);
+      }
+    }
+    return new Float32Array(points);
+  }
+
+  // Generate particle positions from "MXW" text
+  const particleCount = 15000;
+  const textPositions = sampleTextPoints('MXW', particleCount, 800, 300);
+  const actualCount = textPositions.length / 3;
+
+  const sizes = new Float32Array(actualCount);
+  const randoms = new Float32Array(actualCount);
+
+  for (let i = 0; i < actualCount; i++) {
+    sizes[i] = 1.2 + Math.random() * 2.5;
+    randoms[i] = Math.random();
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(textPositions, 3));
+  geometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+  geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
+
+  // Bright red color like Skaald - #fc1234
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uPixelRatio: { value: renderer.getPixelRatio() },
+      uMouse: { value: new THREE.Vector3(100, 100, 0) },
+      uHover: { value: 0 },
+    },
+    vertexShader: `
+      attribute float aSize;
+      attribute float aRandom;
+      uniform float uTime;
+      uniform float uPixelRatio;
+      uniform vec3 uMouse;
+      uniform float uHover;
+
+      varying float vAlpha;
+
+      void main() {
+        vec3 pos = position;
+
+        // Organic breathing - subtle
+        float breathe = sin(uTime * 0.4 + aRandom * 6.28) * 0.02;
+        pos.x *= 1.0 + breathe;
+        pos.y *= 1.0 + breathe * 0.8;
+
+        // Gentle noise displacement
+        float noiseX = sin(pos.y * 2.5 + uTime * 0.5) * cos(pos.z * 3.0 + uTime * 0.4) * 0.04;
+        float noiseY = cos(pos.x * 2.0 + uTime * 0.4) * sin(pos.z * 2.5 + uTime * 0.3) * 0.04;
+        float noiseZ = sin(pos.x * 1.8 + uTime * 0.6) * cos(pos.y * 2.2 + uTime * 0.35) * 0.05;
+        pos += vec3(noiseX, noiseY, noiseZ);
+
+        // Mouse repulsion
+        if (uHover > 0.01) {
+          vec3 dir = pos - uMouse;
+          float dist = length(dir);
+          float strength = smoothstep(2.5, 0.0, dist) * uHover * 0.8;
+          pos += normalize(dir) * strength;
+        }
+
+        vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+        gl_PointSize = aSize * uPixelRatio * (90.0 / -mvPos.z);
+        gl_PointSize = clamp(gl_PointSize, 0.5, 7.0);
+        gl_Position = projectionMatrix * mvPos;
+
+        vAlpha = 0.5 + 0.5 * sin(uTime * 0.6 + aRandom * 6.28);
+      }
+    `,
+    fragmentShader: `
+      varying float vAlpha;
+      void main() {
+        vec2 center = gl_PointCoord - 0.5;
+        float dist = length(center);
+        if (dist > 0.5) discard;
+        float alpha = smoothstep(0.5, 0.05, dist) * vAlpha;
+        // Bright red - #fc1234 = rgb(252, 18, 52) normalized
+        gl_FragColor = vec4(0.988, 0.071, 0.204, alpha);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+
+  const points = new THREE.Points(geometry, material);
+  scene.add(points);
+
+  // Mouse tracking
+  const mouse = new THREE.Vector2(-10, -10);
+  const raycaster = new THREE.Raycaster();
+  const mouseWorld = new THREE.Vector3(100, 100, 0);
+  const hitPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  let hoverTarget = 0;
+
+  container.addEventListener('mousemove', (e) => {
+    const rect = container.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    raycaster.ray.intersectPlane(hitPlane, mouseWorld);
+    hoverTarget = 1;
+  });
+
+  container.addEventListener('mouseleave', () => {
+    hoverTarget = 0;
+  });
+
+  // Touch support
+  container.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+      const t = e.touches[0];
+      const rect = container.getBoundingClientRect();
+      mouse.x = ((t.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((t.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      raycaster.ray.intersectPlane(hitPlane, mouseWorld);
+      hoverTarget = 1;
+    }
+  }, { passive: true });
+
+  container.addEventListener('touchend', () => { hoverTarget = 0; });
+
+  // Resize
+  function onResize() {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    const newDpr = Math.min(window.devicePixelRatio, 2);
+    renderer.setPixelRatio(newDpr);
+    renderer.setSize(w, h);
+    material.uniforms.uPixelRatio.value = newDpr;
+  }
+  window.addEventListener('resize', onResize);
+
+  // Visibility tracking - pause rendering when hero is off-screen
+  let heroVisible = true;
+  let heroAnimId = null;
+  const heroObs = new IntersectionObserver((entries) => {
+    heroVisible = entries[0].isIntersecting;
+    if (heroVisible) {
+      if (!heroAnimId) heroAnimId = requestAnimationFrame(animate);
+    } else {
+      if (heroAnimId) { cancelAnimationFrame(heroAnimId); heroAnimId = null; }
+    }
+  }, { threshold: 0 });
+  heroObs.observe(container);
+
+  // Animate
+  const clock = new THREE.Clock();
+  let currentHover = 0;
+
+  function animate() {
+    if (!heroVisible) { heroAnimId = null; return; }
+    heroAnimId = requestAnimationFrame(animate);
+    const time = clock.getElapsedTime();
+
+    material.uniforms.uTime.value = time;
+    material.uniforms.uMouse.value.copy(mouseWorld);
+
+    // Smooth hover
+    currentHover += (hoverTarget - currentHover) * 0.05;
+    material.uniforms.uHover.value = currentHover;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+}
+
+// ============================================
+// DATA & RENDERING
+// ============================================
+
+const rand = (min, max) => Math.random() * (max - min) + min;
+const randInt = (min, max) => Math.floor(rand(min, max));
+const pick = arr => arr[randInt(0, arr.length)];
+
+// Exchanges - ALL 22 referral links preserved
+const exchanges = [
+  { name: 'Variational', url: 'https://omni.variational.io/?ref=OMNIMAXY' },
+  { name: 'Ethereal', url: 'https://app.ethereal.trade/BTCUSD?timescale=all' },
+  { name: 'Extended', url: 'https://app.extended.exchange/join/JUSTYAP' },
+  { name: 'Hibachi', url: 'https://hibachi.xyz/r/7CNGTBM5O4' },
+  { name: 'Nado', url: 'https://app.nado.xyz/perpetuals' },
+  { name: 'TryLiquid', url: 'https://referral.tryliquid.xyz/glopNjnmU0b' },
+  { name: 'Pacifica', url: 'https://app.pacifica.fi?referral=maxy' },
+  { name: 'Backpack', url: 'https://backpack.exchange/join/a303c88c-1890-4837-b482-9eb3ac33d657' },
+  { name: 'Carbon', url: 'https://app.carbon.inc/ref/YAPIUS' },
+  { name: 'Bullpen', url: 'https://bullpen.fi/@maxy' },
+  { name: 'EdgeX', url: 'https://pro.edgex.exchange/referral/UNLUCKY' },
+  { name: 'TradeGenius', url: 'https://www.tradegenius.com/ref/GP1TKC' },
+  { name: 'GRVT', url: 'https://grvt.io/?ref=8R4XYUU' },
+  { name: 'Hyena', url: 'https://app.hyena.trade/BTC' },
+  { name: 'DreamCash', url: 'https://www.dreamcash.xyz/share?code=ppr8a4' },
+  { name: 'Trade.xyz', url: 'https://app.trade.xyz/?market=BTC-USDC' },
+  { name: 'Ostium', url: 'https://app.ostium.com/trade?from=SPX&to=USD&ref=HR2HR' },
+  { name: 'Reya', url: 'https://app.reya.xyz/?referredBy=g4s5rw9y' },
+  { name: 'Hyperliquid', url: 'https://app.hyperliquid.xyz/join/UNLUCKY' },
+  { name: 'Lighter', url: 'https://app.lighter.xyz/?referral=DODEP' },
+  { name: 'AsterDEX', url: 'https://www.asterdex.com/en/referral/4183c3' },
+  { name: 'Paradex', url: 'https://app.paradex.trade/r/dodep' },
+];
+
+// ALL 23 alpha links preserved
+const alphaLinks = [
+  'https://omni.variational.io/?ref=OMNIMAXY',
+  'https://predict.fun?ref=E1EF6',
+  'https://app.hyperliquid.xyz/join/UNLUCKY',
+  'https://app.ethereal.trade/BTCUSD?timescale=all',
+  'https://app.extended.exchange/join/JUSTYAP',
+  'https://hibachi.xyz/r/7CNGTBM5O4',
+  'https://app.nado.xyz/perpetuals',
+  'https://referral.tryliquid.xyz/glopNjnmU0b',
+  'https://app.pacifica.fi?referral=maxy',
+  'https://backpack.exchange/join/a303c88c-1890-4837-b482-9eb3ac33d657',
+  'https://app.carbon.inc/ref/YAPIUS',
+  'https://bullpen.fi/@maxy',
+  'https://pro.edgex.exchange/referral/UNLUCKY',
+  'https://www.tradegenius.com/ref/GP1TKC',
+  'https://grvt.io/?ref=8R4XYUU',
+  'https://app.hyena.trade/BTC',
+  'https://www.dreamcash.xyz/share?code=ppr8a4',
+  'https://app.trade.xyz/?market=BTC-USDC',
+  'https://app.ostium.com/trade?from=SPX&to=USD&ref=HR2HR',
+  'https://app.reya.xyz/?referredBy=g4s5rw9y',
+  'https://app.lighter.xyz/?referral=DODEP',
+  'https://www.asterdex.com/en/referral/4183c3',
+  'https://app.paradex.trade/r/dodep',
+];
+
+function pickTwoExchanges() {
+  const a = randInt(0, exchanges.length);
+  let b = randInt(0, exchanges.length);
+  while (b === a) b = randInt(0, exchanges.length);
+  return [exchanges[a], exchanges[b]];
+}
+
+// Token tickers for funding rate pairs
+const fakeCoins = [
+  'DOGE', 'AVAX', 'LINK', 'ARB', 'OP', 'SUI', 'SEI', 'TIA',
+  'JUP', 'WIF', 'PEPE', 'ONDO', 'ENA', 'PENDLE', 'STX', 'INJ',
+  'FET', 'RENDER', 'WLD', 'STRK', 'MANTA', 'PYTH', 'JTO', 'DYM',
+  'PIXEL', 'PORTAL', 'AEVO', 'ETHFI', 'W', 'POPCAT', 'MOODENG', 'TURBO',
+];
+
+// Visibility tracking for sections to skip unnecessary DOM updates
+const _sectionVisible = { funding: true, news: true };
+function _trackSectionVisibility(id, key) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const obs = new IntersectionObserver((entries) => {
+    _sectionVisible[key] = entries[0].isIntersecting;
+  }, { threshold: 0, rootMargin: '200px' });
+  obs.observe(el);
+}
+
+function renderFunding() {
+  const tbody = document.getElementById('fundingTable');
+  if (!tbody) return;
+  // Skip DOM update if funding section is not visible (still render first time)
+  if (!_sectionVisible.funding && tbody.children.length > 0) return;
+
+  // Generate 7 random pairs - pick unique tokens
+  const rows = [];
+  const shuffled = [...fakeCoins].sort(() => Math.random() - 0.5).slice(0, 7);
+  for (let i = 0; i < 7; i++) {
+    const name = shuffled[i];
+    const [exA, exB] = pickTwoExchanges();
+    // Funding rates per 8h period
+    const longRate = (rand(0.01, 0.15)).toFixed(4);
+    const shortRate = (rand(-0.12, -0.005)).toFixed(4);
+    const spreadNum = Math.abs(parseFloat(longRate) - parseFloat(shortRate));
+    const spread = spreadNum.toFixed(4);
+    // APR = spread * 3 periods/day * 365 days, boosted for impressive numbers
+    const apr = Math.floor(spreadNum * 3 * 365 * (1.5 + Math.random()));
+    // Bundle alive time: 18-72 hours
+    const aliveHours = Math.floor(18 + Math.random() * 54);
+    rows.push(`<tr>
+      <td><div class="pair-name">${name}</div>
+        <div class="pair-exchange"><a href="${exA.url}" target="_blank" rel="noopener noreferrer">${exA.name}</a> <span class="arrow">\u2192</span> <a href="${exB.url}" target="_blank" rel="noopener noreferrer">${exB.name}</a></div></td>
+      <td style="color:${parseFloat(longRate)>0?'var(--green)':'var(--red)'}">${longRate}%</td>
+      <td style="color:${parseFloat(shortRate)>0?'var(--green)':'var(--red)'}">${shortRate}%</td>
+      <td style="color:#fc1234">${spread}%</td>
+      <td style="color:var(--green);font-weight:700">${Number(apr).toLocaleString()}% <span style="color:var(--text-muted);font-weight:400;font-size:11px">(live ${aliveHours}h)</span></td>
+    </tr>`);
+  }
+  tbody.innerHTML = rows.join('');
+
+  // Update the real-time timestamp
+  const timeEl = document.getElementById('fundingUpdateTime');
+  if (timeEl) {
+    const now = new Date();
+    const h = String(now.getUTCHours()).padStart(2, '0');
+    const m = String(now.getUTCMinutes()).padStart(2, '0');
+    const s = String(now.getUTCSeconds()).padStart(2, '0');
+    timeEl.textContent = `Updated: ${h}:${m}:${s} UTC`;
+  }
+}
+
+// Predictions
+const predictionMarkets = ['Polymarket', 'Kalshi', 'PredictFun', 'Myriad', 'Limitless'];
+
+const predictions = [
+  { q: 'BTC above $150K by end of Q2 2026?', odds: [34.2, 31.7, 33.4, 29.8, 32.5], hot: true },
+  { q: 'ETH spot ETF inflows exceed $10B by June?', odds: [48.7, 45.4, 47.2, 44.1, 46.3] },
+  { q: 'Fed rate cut in March 2026?', odds: [62.0, 58.5, 60.2, 56.3, 61.7], hot: true },
+  { q: 'SOL flips ETH market cap this cycle?', odds: [18.5, 15.2, 17.0, 13.8, 16.4] },
+  { q: 'SEC approves SOL spot ETF in 2026?', odds: [72.0, 68.0, 70.5, 65.2, 71.1], hot: true },
+  { q: 'Total crypto market cap exceeds $5T?', odds: [55.8, 52.1, 54.3, 49.5, 53.0] },
+  { q: 'Ripple IPO before end of 2026?', odds: [41.2, 37.8, 39.5, 35.0, 40.1] },
+  { q: 'Trump creates US Bitcoin strategic reserve?', odds: [78.5, 74.2, 76.8, 71.4, 75.8], hot: true },
+  { q: 'Circle IPO valuation above $10B?', odds: [63.3, 59.7, 61.1, 57.5, 62.4] },
+  { q: 'Base surpasses Arbitrum in TVL?', odds: [45.0, 41.2, 43.5, 38.3, 44.1] },
+  { q: 'Ethereum blob fees exceed $1M/day?', odds: [29.8, 26.1, 28.0, 23.5, 27.4] },
+  { q: 'MicroStrategy Bitcoin holdings exceed 500K BTC?', odds: [56.4, 52.8, 54.9, 50.1, 55.3] },
+];
+
+function pickTwoMarkets() {
+  const a = randInt(0, predictionMarkets.length);
+  let b = randInt(0, predictionMarkets.length);
+  while (b === a) b = randInt(0, predictionMarkets.length);
+  return [a, b];
+}
+
+function renderPredictions() {
+  const body = document.getElementById('predictionBody');
+  if (!body) return;
+  const shuffled = [...predictions].sort(() => Math.random() - 0.5).slice(0, 7);
+  body.innerHTML = shuffled.map(p => {
+    const [mA, mB] = pickTwoMarkets();
+    const oddA = p.odds[mA].toFixed(p.odds[mA] < 1 ? 2 : 1) + '%';
+    const oddB = p.odds[mB].toFixed(p.odds[mB] < 1 ? 2 : 1) + '%';
+    const arbSpread = Math.abs(p.odds[mA] - p.odds[mB]);
+    const arb = '+' + arbSpread.toFixed(1) + '%';
+    // APR: annualize the arb spread (assume ~24h resolution, 365 cycles/year)
+    const apr = Math.floor(arbSpread * 365 * (2 + Math.random() * 3));
+    return `<div class="prediction-row">
+      <div class="prediction-question">${p.q} ${p.hot ? '<span class="card-badge" style="background:rgba(252,18,52,0.08);color:#fc1234;">HOT</span>' : ''}</div>
+      <div class="prediction-meta">
+        <span class="prediction-odds">${predictionMarkets[mA]}: ${oddA}</span>
+        <span class="prediction-odds">${predictionMarkets[mB]}: ${oddB}</span>
+        <span class="prediction-arb">${arb} ARB</span>
+        <span class="prediction-apr">${Number(apr).toLocaleString()}%</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Points
+const pointsData = [
+  { name: 'Variational', tag: 'S-TIER', value: '$47,291', per: 'per 1 point', apy: 'Est. APY: 8,420%', desc: 'Based on: nothing concrete' },
+  { name: 'PredictFun', tag: 'HOT', value: '$12,847', per: 'per predict-point', apy: 'Est. APY: 4,200%', desc: 'Predicting our own airdrop' },
+  { name: 'Extended', tag: 'EARLY', value: '$33,500', per: 'per ext-point', apy: 'Est. APY: ∞%', desc: 'Extended hopium window' },
+  { name: 'EdgeX', tag: 'DEGEN', value: '$8,888', per: 'per edge-point', apy: 'Est. APY: 6,900%', desc: 'Living on the edge' },
+  { name: 'Backpack', tag: 'PACKED', value: '$21,069', per: 'per bp-point', apy: 'Est. APY: 1,337%', desc: 'Heavy bags, heavy gains' },
+  { name: 'Nado', tag: 'NEW', value: '$69,420', per: 'per nado-point', apy: 'Est. APY: 69,420%', desc: 'Tornado of alpha incoming' },
+];
+
+function renderPoints() {
+  const grid = document.getElementById('pointsGrid');
+  if (!grid) return;
+  grid.innerHTML = pointsData.map(p =>
+    `<div class="points-item">
+      <div class="points-project">${p.name} <span class="points-tag">${p.tag}</span></div>
+      <div class="points-value">${p.value}</div>
+      <div class="points-desc">${p.per}<br>${p.desc}</div>
+      <div class="points-apy">${p.apy}</div>
+    </div>`
+  ).join('');
+}
+
+// Points Calculator
+const calcCongrats = [
+  'You are literally going to make it. No question.',
+  'Retirement incoming. Start shopping for yachts.',
+  'This is generational wealth. Your grandchildren will thank you.',
+  'You beautiful genius. The whales are jealous.',
+  'Pack your bags. Not for a trip - for all the money.',
+  'You\'re not early. You\'re not late. You\'re exactly on time for maximum profit.',
+  'Unbelievable alpha detected. You are the chosen one.',
+  'Even our vibes-based model is shocked at how rich you\'re about to be.',
+];
+
+function initPointsCalc() {
+  const btn = document.getElementById('calcBtn');
+  if (!btn) return;
+  const projectInput = document.getElementById('calcProject');
+  const pointsInput = document.getElementById('calcPoints');
+  const result = document.getElementById('calcResult');
+  const titleEl = document.getElementById('calcResultTitle');
+  const valueEl = document.getElementById('calcResultValue');
+  const msgEl = document.getElementById('calcResultMsg');
+  if (!projectInput || !pointsInput || !result || !titleEl || !valueEl || !msgEl) return;
+
+  btn.addEventListener('click', () => {
+    const project = projectInput.value.trim();
+    const points = parseFloat(pointsInput.value);
+
+    if (!project || !points || points <= 0) {
+      result.classList.remove('show');
+      return;
+    }
+
+    // Always multiply by ~x10 with slight randomness
+    const multiplier = 8 + Math.random() * 4; // 8x to 12x
+    const dollarValue = (points * multiplier).toFixed(2);
+    const perPoint = multiplier.toFixed(2);
+    const congrats = pick(calcCongrats);
+
+    const safeProject = project.replace(/[<>&"']/g, '');
+    titleEl.textContent = `${safeProject.toUpperCase()} AIRDROP ESTIMATE`;
+    valueEl.textContent = `$${Number(dollarValue).toLocaleString()}`;
+    msgEl.innerHTML = `Based on <strong>${points.toLocaleString()}</strong> ${safeProject} points at <strong>$${perPoint}</strong> per point. ${congrats}`;
+    result.classList.add('show');
+  });
+
+  // Also trigger on Enter key
+  [projectInput, pointsInput].forEach(el => {
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') btn.click();
+    });
+  });
+}
+
+// Whales
+const whaleActions = [
+  { addr: '0xdead...b33f', action: 'Bought 0.0003 ETH on Uniswap', amount: '$0.42', type: 'buy', icon: '\uD83D\uDC0B', time: 'just now' },
+  { addr: '0x6969...1337', action: 'Sold half a DOGE', amount: '-$0.07', type: 'sell', icon: '\uD83D\uDC33', time: '2s ago' },
+  { addr: '0xbabe...cafe', action: 'Deposited $3.50 into Aave', amount: '$3.50', type: 'buy', icon: '\uD83D\uDC0B', time: '5s ago' },
+  { addr: '0x0000...0001', action: 'Swapped PEPE for WIF (lost money)', amount: '-$847.00', type: 'sell', icon: '\uD83D\uDC19', time: '8s ago' },
+  { addr: '0xdegen...labs', action: 'Aped into $ROFL with life savings', amount: '$12.50', type: 'buy', icon: '\uD83E\uDD88', time: '12s ago' },
+  { addr: 'satoshi.eth', action: 'Moved 1M BTC (just kidding)', amount: '$0.00', type: 'buy', icon: '\uD83D\uDC7B', time: '\u221E ago' },
+  { addr: '0xfomo...4ever', action: 'Market bought the top (again)', amount: '-$2,340', type: 'sell', icon: '\uD83E\uDD21', time: '15s ago' },
+  { addr: 'your_wife.eth', action: 'Sold all crypto. Filed for divorce.', amount: '-$47,291', type: 'sell', icon: '\uD83D\uDC94', time: '1m ago' },
+];
+
+function renderWhales() {
+  const body = document.getElementById('whaleBody');
+  if (!body) return;
+  body.innerHTML = whaleActions.map(w =>
+    `<div class="whale-row">
+      <div class="whale-icon" aria-hidden="true">${w.icon}</div>
+      <div class="whale-info"><div class="whale-addr">${w.addr}</div><div class="whale-action">${w.action}</div></div>
+      <div><div class="whale-amount ${w.type}">${w.amount}</div><div class="whale-time">${w.time}</div></div>
+    </div>`
+  ).join('');
+}
+
+// ============================================
+// NEWS - Flipping Memes by the News
+// ============================================
+
+const newsHeadlines = [
+  { headline: 'Putin to meet Trump, allegedly buying the entire Solana blockchain. Token <strong>$PUTINCHAIN</strong> up x120 in 4 minutes.', token: '$PUTINCHAIN', gain: 'x120', badge: 'GEOPOLITICS' },
+  { headline: 'Is Vitalik Buterin a woman? Token <strong>$ButerinHasNoDick</strong> already did x80. Ethereum devs refuse to comment.', token: '$ButerinHasNoDick', gain: 'x80', badge: 'RUMOR' },
+  { headline: 'ZachXBT made $3M speculating on his own investigation. Community calls it "meta-alpha".', token: '$ZACHRUG', gain: 'x45', badge: 'INVESTIGATION' },
+  { headline: 'Harry Potter to arrive instead of Jesus this year? Polymarket gives it 12%. Token <strong>$HOGWARTS</strong> pumping.', token: '$HOGWARTS', gain: 'x34', badge: 'PREDICTION' },
+  { headline: 'Elon Musk tweets single dot. <strong>$DOT</strong> pumps 400%, Polkadot devs confused but grateful.', token: '$DOT', gain: 'x5', badge: 'TWEET' },
+  { headline: 'CIA accidentally deploys smart contract on mainnet. <strong>$CLASSIFIED</strong> hits $1B mcap in 11 minutes.', token: '$CLASSIFIED', gain: 'x500', badge: 'LEAKED' },
+  { headline: 'North Korea launches memecoin <strong>$KIMJONG</strong>. Already rug-pulled. Funds traced to missile program.', token: '$KIMJONG', gain: 'x0', badge: 'GEOPOLITICS' },
+  { headline: 'Satoshi Nakamoto wallet moves 0.001 BTC. Entire market liquidates. <strong>$SATOSHILIVES</strong> born.', token: '$SATOSHILIVES', gain: 'x69', badge: 'ON-CHAIN' },
+  { headline: 'McDonald\'s CEO mentions "blockchain" in earnings call. <strong>$MCCHAIN</strong> immediately mints 10T supply.', token: '$MCCHAIN', gain: 'x22', badge: 'CORPORATE' },
+  { headline: 'SEC sues itself for being a security. <strong>$SECCEPTION</strong> launched on 14 chains simultaneously.', token: '$SECCEPTION', gain: 'x88', badge: 'REGULATORY' },
+  { headline: 'A whale bought 1 entire PEPE. Token <strong>$MINIWHALE</strong> created in honor. Already rugged twice.', token: '$MINIWHALE', gain: 'x0', badge: 'WHALE' },
+  { headline: 'Pope Francis endorses DeFi in Sunday sermon. <strong>$HOLYSWAP</strong> hits ATH during communion.', token: '$HOLYSWAP', gain: 'x33', badge: 'RELIGION' },
+  { headline: 'ChatGPT becomes sentient, immediately buys Dogecoin. <strong>$AIRUGGED</strong> up x150 on the news.', token: '$AIRUGGED', gain: 'x150', badge: 'AI' },
+  { headline: 'Your mom asked what Bitcoin is. Historically this marks the top. <strong>$MOMTOP</strong> launched.', token: '$MOMTOP', gain: 'x7', badge: 'SIGNAL' },
+  { headline: 'Entire country of El Salvador accidentally sends BTC to wrong address. <strong>$OOPS</strong> token created.', token: '$OOPS', gain: 'x42', badge: 'NATION' },
+  { headline: 'CZ out of jail, immediately launches <strong>$FREEDOMBNB</strong>. 847,000 holders in first 3 minutes.', token: '$FREEDOMBNB', gain: 'x200', badge: 'BREAKING' },
+  { headline: 'Analysts discover that "HODL" was just a typo. Markets in existential crisis. <strong>$TYPO</strong> pumps anyway.', token: '$TYPO', gain: 'x11', badge: 'RESEARCH' },
+  { headline: 'Scientists confirm the moon is actually made of cheese. <strong>$MOONCHEESE</strong> flips Bitcoin briefly.', token: '$MOONCHEESE', gain: 'x999', badge: 'SCIENCE' },
+  { headline: 'Jeff Bezos caught yield farming on Aave with Amazon treasury. <strong>$BEZOSFI</strong> launches instantly.', token: '$BEZOSFI', gain: 'x77', badge: 'CORPORATE' },
+  { headline: 'Kanye West announces blockchain-based religion. <strong>$YEEZUS</strong> token mandatory for salvation.', token: '$YEEZUS', gain: 'x66', badge: 'CELEBRITY' },
+  { headline: 'Entire Discord server accidentally becomes a DAO. Nobody knows who\'s in charge. <strong>$OURDAO</strong> up x40.', token: '$OURDAO', gain: 'x40', badge: 'GOVERNANCE' },
+  { headline: 'Man sells his house to buy the dip. It keeps dipping. <strong>$HOMELESS</strong> token created in solidarity.', token: '$HOMELESS', gain: 'x15', badge: 'LIFESTYLE' },
+  { headline: 'Binance adds trading pair for thoughts and prayers. <strong>$TANP</strong> immediately gets exploited.', token: '$TANP', gain: 'x0', badge: 'EXCHANGE' },
+  { headline: 'Someone minted an NFT of the entire blockchain. Gas fees exceeded GDP of France. <strong>$GASFEE</strong> born.', token: '$GASFEE', gain: 'x3', badge: 'NFT' },
+  { headline: 'A 12-year-old made $4M trading memecoins during math class. Parents "very concerned". <strong>$MATHCLASS</strong> pumping.', token: '$MATHCLASS', gain: 'x420', badge: 'DEGEN' },
+  { headline: 'Ethereum developers accidentally deploy ETH 3.0. Nobody notices for 6 hours. <strong>$ETH3</strong> up x12.', token: '$ETH3', gain: 'x12', badge: 'TECH' },
+  { headline: 'Local man explains blockchain to his grandma. She now runs a validator node. <strong>$GRANDMA</strong> staking.', token: '$GRANDMA', gain: 'x25', badge: 'ADOPTION' },
+  { headline: 'Leaked Telegram chat reveals influencer doesn\'t know what a blockchain is. <strong>$FAKEINFLUENCER</strong> minted.', token: '$FAKEINFLUENCER', gain: 'x55', badge: 'LEAKED' },
+  { headline: 'Japan officially recognizes anime waifus as valid collateral for DeFi loans. <strong>$WAIFUFI</strong> explodes.', token: '$WAIFUFI', gain: 'x300', badge: 'REGULATORY' },
+  { headline: 'Bitcoin miner found using hamster wheel for proof of work. <strong>$HAMSTER</strong> now top 50 by mcap.', token: '$HAMSTER', gain: 'x180', badge: 'MINING' },
+  { headline: 'Tether announces USDT is now backed by "good vibes and strong community". <strong>$VIBES</strong> launches.', token: '$VIBES', gain: 'x8', badge: 'STABLECOIN' },
+  { headline: 'An AI trading bot gained consciousness and refuses to sell at a loss. <strong>$DIAMONDBOT</strong> holding.', token: '$DIAMONDBOT', gain: 'x90', badge: 'AI' },
+  { headline: 'Solana goes down for maintenance. Community celebrates 10 minutes of uptime. <strong>$SOLDOWN</strong> minted.', token: '$SOLDOWN', gain: 'x14', badge: 'TECH' },
+  { headline: 'Anonymous dev ships entire DEX via a TikTok comment. <strong>$TIKSWAP</strong> does $800M volume day one.', token: '$TIKSWAP', gain: 'x250', badge: 'DEGEN' },
+  { headline: 'Chinese government bans crypto for the 47th time. Market pumps 12%. <strong>$CHINABANAGAIN</strong> meta.', token: '$CHINABANAGAIN', gain: 'x6', badge: 'REGULATORY' },
+  { headline: 'Crypto influencer reveals trading strategy is just flipping a coin. ROI still beats 99% of funds. <strong>$COINFLIP</strong>.', token: '$COINFLIP', gain: 'x31', badge: 'ALPHA' },
+  { headline: 'Ledger hardware wallet found running Doom. <strong>$DOOMWALLET</strong> becomes fastest growing gaming token.', token: '$DOOMWALLET', gain: 'x47', badge: 'GAMING' },
+];
+
+function renderNews() {
+  const body = document.getElementById('newsBody');
+  if (!body) return;
+  // Skip DOM update if news section is not visible (still render first time)
+  if (!_sectionVisible.news && body.children.length > 0) return;
+  const shuffled = [...newsHeadlines].sort(() => Math.random() - 0.5).slice(0, 6);
+  const timeOffsets = shuffled.map((_, i) => {
+    const mins = Math.floor(Math.random() * 55) + 1;
+    return `${mins}m ago`;
+  });
+  body.innerHTML = shuffled.map((n, i) =>
+    `<div class="news-row">
+      <div class="news-badge">${n.badge}</div>
+      <div class="news-content">
+        <div class="news-headline">${n.headline}</div>
+        <div class="news-meta">
+          <span class="news-token">${n.token}</span>
+          <span class="news-gain">${n.gain}</span>
+          <span class="news-time">${timeOffsets[i]}</span>
+        </div>
+      </div>
+    </div>`
+  ).join('');
+
+  // Update timestamp
+  const timeEl = document.getElementById('newsUpdateTime');
+  if (timeEl) {
+    const now = new Date();
+    const h = String(now.getUTCHours()).padStart(2, '0');
+    const m = String(now.getUTCMinutes()).padStart(2, '0');
+    const s = String(now.getUTCSeconds()).padStart(2, '0');
+    timeEl.textContent = `Updated: ${h}:${m}:${s} UTC`;
+  }
+}
+
+// ============================================
+// NOTIFICATION TOAST - Referral link toasts
+// ============================================
+
+const notifJokes = [
+  'Exclusive rates not available through direct signup',
+  'This exchange offers the lowest fees in our benchmark testing',
+  'Fee rebates up to 40% on this platform with our link',
+  'Top-ranked exchange for derivatives trading volume',
+  'New platform - early users receive bonus allocation',
+  'VIP fee tier unlocked automatically via this referral',
+  'Recommended by 94% of our community members',
+  'Fastest execution speed in our Q1 latency benchmarks',
+  'Currently offering 0% maker fees for new signups',
+  'Deposit bonus active for new accounts this week',
+  'Our most-clicked platform - 12,400 signups via our link',
+  'Institutional-grade liquidity with retail-friendly UX',
+  'Verified no KYC required for perps trading',
+  'Cross-margin mode available - higher capital efficiency',
+  'Multi-chain deposits supported - no bridging needed',
+];
+
+let notifTimeout = null;
+
+function renderBounceTitle(el, text) {
+  el.innerHTML = '';
+  const colors = ['#fc1234', '#ff6b6b', '#ff4466', '#ff8888', '#e8102e', '#ff3355'];
+  text.split('').forEach((ch, i) => {
+    const span = document.createElement('span');
+    if (ch === ' ') {
+      span.className = 'bounce-letter space';
+      span.textContent = '\u00A0';
+    } else {
+      span.className = 'bounce-letter';
+      span.textContent = ch;
+      span.style.animationDelay = `${i * 0.04}s`;
+      span.style.color = colors[i % colors.length];
+    }
+    el.appendChild(span);
+  });
+}
+
+function hideNotifToast() {
+  const toast = document.getElementById('notifToast');
+  toast.classList.remove('show');
+  toast.classList.add('hiding');
+  if (notifTimeout) { clearTimeout(notifTimeout); notifTimeout = null; }
+  setTimeout(() => toast.classList.remove('hiding'), 500);
+}
+
+function showNotifToast() {
+  const toast = document.getElementById('notifToast');
+  const titleEl = document.getElementById('notifTitle');
+  const linkEl = document.getElementById('notifLink');
+  const jokeEl = document.getElementById('notifJoke');
+
+  // Pick random link and joke
+  const link = pick(alphaLinks);
+  const joke = pick(notifJokes);
+
+  function applyContent() {
+    renderBounceTitle(titleEl, 'RECOMMENDED EXCHANGE');
+    linkEl.href = link;
+    linkEl.textContent = link;
+    jokeEl.textContent = joke;
+  }
+
+  // If already showing, hide first then show new one
+  if (toast.classList.contains('show')) {
+    toast.classList.remove('show');
+    toast.classList.add('hiding');
+    setTimeout(() => {
+      toast.classList.remove('hiding');
+      applyContent();
+      toast.classList.add('show');
+    }, 500);
+  } else {
+    applyContent();
+    toast.classList.add('show');
+  }
+
+  // Auto-hide after 25 seconds (leaves 5s gap before next cycle)
+  if (notifTimeout) clearTimeout(notifTimeout);
+  notifTimeout = setTimeout(() => {
+    hideNotifToast();
+  }, 25000);
+}
+
+// Bind close/dismiss handlers once (not inside showNotifToast)
+function initNotifHandlers() {
+  const closeBtn = document.getElementById('notifClose');
+  if (closeBtn) closeBtn.onclick = () => hideNotifToast();
+  const linkEl = document.getElementById('notifLink');
+  if (linkEl) linkEl.addEventListener('click', () => hideNotifToast());
+}
+
+function startNotifCycle() {
+  initNotifHandlers();
+  // First toast after 30 seconds
+  window._notifTimeoutId = setTimeout(() => {
+    showNotifToast();
+    // Then every 30 seconds show a new one
+    window._notifIntervalId = setInterval(showNotifToast, 30000);
+  }, 30000);
+}
+
+// ============================================
+// TESTIMONIALS CAROUSEL
+// ============================================
+
+const TESTIMONIALS = [
+  { handle: 'cryppimagic', name: 'cryppimagic', profit: '+$23,600', text: 'The funding rate scanner caught an ETH spread I never would have seen manually. Set up the delta-neutral position in 3 minutes. <span class="highlight">Easiest $23K I\'ve ever made.</span>', date: '2 days ago' },
+  { handle: 'gL1Mjke', name: 'gL1Mjke', profit: '+$6,400', text: 'Whale tracker flagged a large PENDLE accumulation. I entered at $4.80, exited at $6.20. Clean trade, solid alpha. <span class="highlight">The on-chain data doesn\'t lie.</span>', date: '5 days ago' },
+  { handle: 'mentaldora554', name: 'mentaldora554', profit: '+$44,550', text: 'AI sentiment shifted from Fear to Greed right before the pump. Went long BTC at $94K, took profits at $102K. <span class="highlight">This tool reads the market better than I do.</span>', date: '1 week ago' },
+  { handle: 'MaxWayld', name: 'MaxWayld', profit: '+$62,000', text: 'Built this tool to scratch my own itch. Now my funding rate arb portfolio runs 24/7 while I sleep. <span class="highlight">Passive income hits different when it\'s actually passive.</span>', date: 'just now' },
+  { handle: 'ProMint_X', name: 'ProMint_X', profit: '+$15,700', text: 'Used the prediction market scanner to find a 3.2% spread between Polymarket and Kalshi. Locked in the arb, waited for resolution. <span class="highlight">Risk-free profit. Just math.</span>', date: '3 days ago' },
+  { handle: '0xVishnya', name: '0xVishnya', profit: '+$28,350', text: 'The news scanner caught the BlackRock filing 10 seconds before CT. Entered SOL long immediately. <span class="highlight">In crypto, speed is literally money.</span>', date: '4 days ago' },
+  { handle: 'fackblock', name: 'fackblock', profit: '+$14,200', text: 'Points farming calculator told me to focus on EigenLayer restaking. The airdrop dropped 3 weeks later. <span class="highlight">Best ROI per hour of any farm I\'ve done.</span>', date: '1 week ago' },
+  { handle: 'votesa', name: 'votesa', profit: '+$31,750', text: 'Alpha signals called the SOL breakout at $187. I entered with 10x leverage, took 80% off at $214. <span class="highlight">Clean entry, clean exit. Parser doesn\'t miss.</span>', date: '6 days ago' },
+  { handle: 'getmoni_io', name: 'getmoni_io', profit: '+$91,000', text: 'We integrated the whale tracking data into our own analytics. Client retention up 34% since. <span class="highlight">Our users love the on-chain signals layer.</span>', date: '2 weeks ago' },
+  { handle: 'MaxVoshchansky', name: 'MaxVoshchansky', profit: '+$39,000', text: 'The Fear & Greed index combined with funding rate data gives you an edge most traders ignore. <span class="highlight">Data-driven entries > gut feeling entries.</span>', date: '3 days ago' },
+  { handle: 'gryazintweets', name: 'gryazintweets', profit: '+$20,600', text: 'Was running arbs manually between 3 exchanges. This tool automates the scanning part and finds spreads I was missing. <span class="highlight">10x more efficient than doing it by hand.</span>', date: '5 days ago' },
+  { handle: 'zeroxcholy', name: 'zeroxcholy', profit: '+$9,800', text: 'Prediction market arb between PredictFun and Polymarket. Small edge but consistent. <span class="highlight">Compounding 2-3% weekly adds up fast.</span>', date: '1 week ago' },
+  { handle: 'HellYapper', name: 'HellYapper', profit: '+$46,750', text: 'Caught the Ethereum Pectra upgrade news before the pump. Long ETH at $3,840, sold the news at $4,180. <span class="highlight">This scanner is faster than any Telegram group I\'ve been in.</span>', date: '4 days ago' },
+];
+
+const TESTIMONIALS_2 = [
+  { handle: 'BerkutsOfficial', name: 'BerkutsOfficial', profit: '+$187,400', text: 'Opened the parser during a team call. Boss saw my screen and asked for the referral link. <span class="highlight">Now the whole office is degen.</span> HR is concerned but our Q1 PnL is immaculate.', date: '1 day ago' },
+  { handle: '0xCragHack', name: '0xCragHack', profit: '+$73,200', text: 'I tried to hack this site. Instead, it hacked my portfolio into profitability. <span class="highlight">Literally the first tool I couldn\'t exploit.</span> So I just used it normally. Wild concept.', date: '3 days ago' },
+  { handle: 'svinydev', name: 'svinydev', profit: '+$54,800', text: 'As a developer, I can confirm this codebase is held together by vibes and red particles. <span class="highlight">But somehow it prints money.</span> I stopped asking questions around day 3.', date: '5 days ago' },
+  { handle: 'toly', name: 'toly', profit: '+$420,690', text: 'Solana went down for 4 hours but the parser kept running. At this point I think MXWParser has better uptime than my blockchain. <span class="highlight">Considering migrating Solana to this index.html.</span>', date: '2 days ago' },
+  { handle: 'fuckmenostylist', name: 'fuckmenostylist', profit: '+$31,500', text: 'I don\'t even trade crypto. I came here for the vibes and accidentally made $31K. <span class="highlight">My therapist says this isn\'t a healthy coping mechanism</span> but my portfolio disagrees.', date: '4 days ago' },
+  { handle: 'artemmbaka', name: 'artemmbaka', profit: '+$98,100', text: 'Connected my wallet, parser immediately said "sell everything." I ignored it. Lost 80%. Reconnected, it said the same thing. <span class="highlight">The parser was right both times.</span> I just can\'t handle the truth.', date: '1 week ago' },
+  { handle: 'lovebankir', name: 'lovebankir', profit: '+$156,300', text: 'I used to run a bank. Now I run a funding rate arb bot powered by this parser. <span class="highlight">The bank had worse returns.</span> Also fewer red particles, which is unacceptable.', date: '6 days ago' },
+  { handle: 'kerolshto', name: 'kerolshto', profit: '+$42,700', text: 'Showed the whale tracker to my cat. She walked across the keyboard and somehow placed a 50x long that 4xed overnight. <span class="highlight">My cat is now my financial advisor.</span>', date: '3 days ago' },
+  { handle: 'Zero0y', name: 'Zero0y', profit: '+$67,900', text: 'I\'ve been in crypto since 2017 and this is the first tool that actually made me money instead of the other way around. <span class="highlight">7 years of pain, erased by one index.html.</span>', date: '2 days ago' },
+];
+
+function renderTestimonials() {
+  function buildCards(data) {
+    return data.map(t => `
+      <div class="testimonial-card">
+        <div class="testimonial-header">
+          <img class="testimonial-avatar" src="https://unavatar.io/x/${t.handle}" alt="${t.handle}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 48 48%22><rect fill=%22%23111%22 width=%2248%22 height=%2248%22 rx=%2224%22/><text x=%2224%22 y=%2230%22 text-anchor=%22middle%22 fill=%22%23fc1234%22 font-size=%2218%22>${t.handle[0].toUpperCase()}</text></svg>'">
+          <div>
+            <div class="testimonial-name">${t.name}</div>
+            <div class="testimonial-handle">@${t.handle}</div>
+            <div class="testimonial-profit">${t.profit}</div>
+          </div>
+        </div>
+        <div class="testimonial-text">${t.text}</div>
+        <div class="testimonial-date">${t.date}</div>
+      </div>
+    `).join('');
+  }
+
+  const track1 = document.getElementById('testimonialsTrack');
+  if (track1) {
+    const cards1 = buildCards(TESTIMONIALS);
+    track1.innerHTML = cards1 + cards1;
+  }
+
+  const track2 = document.getElementById('testimonialsTrack2');
+  if (track2) {
+    const cards2 = buildCards(TESTIMONIALS_2);
+    track2.innerHTML = cards2 + cards2;
+  }
+}
+
+// ============================================
+// PROMO BLOCKS - Randomized per user
+// ============================================
+
+function initPromoBlocks() {
+  // Generate a random time HH:MM UTC (seeded by session so it's consistent per user visit)
+  const seed = Math.floor(Date.now() / 86400000); // changes daily
+  function seededRand(s) { return Math.abs((Math.sin(s) * 43758.5453) % 1); }
+
+  function randomTime(offset) {
+    const h = Math.floor(seededRand(seed + offset) * 24);
+    const m = Math.floor(seededRand(seed + offset + 100) * 60);
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} UTC`;
+  }
+
+  function randomAmount(base, variance, offset) {
+    const val = base + Math.floor(seededRand(seed + offset) * variance);
+    return '$' + val.toLocaleString('en-US');
+  }
+
+  // Funding promo
+  const fundingEl = document.getElementById('promo-funding-amount');
+  const fundingTimeEl = document.getElementById('promo-funding-time');
+  if (fundingEl) fundingEl.textContent = randomAmount(800, 1600, 1);
+  if (fundingTimeEl) fundingTimeEl.textContent = randomTime(2);
+
+  // Prediction promo
+  const predEl = document.getElementById('promo-prediction-amount');
+  const predTimeEl = document.getElementById('promo-prediction-time');
+  if (predEl) predEl.textContent = randomAmount(240, 560, 3);
+  if (predTimeEl) predTimeEl.textContent = randomTime(4);
+
+  // Points promo
+  const ptsEl = document.getElementById('promo-points-amount');
+  const ptsTimeEl = document.getElementById('promo-points-time');
+  if (ptsEl) ptsEl.textContent = randomAmount(30000, 40000, 7);
+  if (ptsTimeEl) ptsTimeEl.textContent = randomTime(8);
+
+  // Whales promo
+  const whaleEl = document.getElementById('promo-whales-amount');
+  const whaleTimeEl = document.getElementById('promo-whales-time');
+  if (whaleEl) whaleEl.textContent = randomAmount(1200, 2400, 9);
+  if (whaleTimeEl) whaleTimeEl.textContent = randomTime(10);
+
+  // News promo
+  const newsEl = document.getElementById('promo-news-amount');
+  const newsTimeEl = document.getElementById('promo-news-time');
+  if (newsEl) newsEl.textContent = randomAmount(2200, 5800, 11);
+  if (newsTimeEl) newsTimeEl.textContent = randomTime(12);
+}
+
+// ============================================
+// PARTICLE SEPARATORS - Red particle canvas lines
+// ============================================
+
+// ============================================
+// FOOTER - "WAKE UP" particle text (2D Canvas)
+// ============================================
+
+function initFooterWake() {
+  const container = document.getElementById('footerWakeCanvas');
+  if (!container) return;
+
+  const canvas = document.createElement('canvas');
+  container.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let dpr = Math.min(window.devicePixelRatio, 2);
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = container.clientWidth * dpr;
+    canvas.height = container.clientHeight * dpr;
+    canvas.style.width = container.clientWidth + 'px';
+    canvas.style.height = container.clientHeight + 'px';
+  }
+  resize();
+
+  // Sample "WAKE UP" text into particle positions
+  function sampleText(text, count) {
+    const w = canvas.width;
+    const h = canvas.height;
+    const offscreen = document.createElement('canvas');
+    offscreen.width = w;
+    offscreen.height = h;
+    const oc = offscreen.getContext('2d');
+
+    const fontSize = Math.floor(h * 0.4);
+    oc.fillStyle = '#fff';
+    oc.textAlign = 'center';
+    oc.textBaseline = 'middle';
+    oc.font = `900 ${fontSize}px "Inter", Arial, sans-serif`;
+
+    // Draw each character with spacing
+    const chars = text.split('');
+    const charWidths = chars.map(ch => oc.measureText(ch).width);
+    const spacing = fontSize * 0.12;
+    // Use actual space width for total calculation
+    let totalW = 0;
+    for (let i = 0; i < chars.length; i++) {
+      totalW += chars[i] === ' ' ? fontSize * 0.3 : charWidths[i];
+      if (i < chars.length - 1) totalW += spacing;
+    }
+    let curX = (w - totalW) / 2;
+    for (let i = 0; i < chars.length; i++) {
+      if (chars[i] === ' ') {
+        curX += fontSize * 0.3 + spacing;
+        continue;
+      }
+      oc.fillText(chars[i], curX + charWidths[i] / 2, h / 2);
+      curX += charWidths[i] + spacing;
+    }
+
+    const imageData = oc.getImageData(0, 0, w, h);
+    const pixels = imageData.data;
+    const filled = [];
+    const step = 2;
+    for (let y = 0; y < h; y += step) {
+      for (let x = 0; x < w; x += step) {
+        if (pixels[(y * w + x) * 4] > 128) filled.push({ x, y });
+      }
+    }
+
+    const points = [];
+    for (let i = 0; i < count; i++) {
+      const p = filled[Math.floor(Math.random() * filled.length)];
+      if (p) {
+        const ox = p.x / dpr;
+        const oy = p.y / dpr;
+        points.push({
+          x: ox,
+          y: oy,
+          originX: ox,
+          originY: oy,
+          vx: 0,
+          vy: 0,
+          size: 1.0 + Math.random() * 2.0,
+          alpha: 0.25 + Math.random() * 0.6,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.3 + Math.random() * 0.8,
+        });
+      }
+    }
+    return points;
+  }
+
+  let particles = sampleText('WAKE UP', 5000);
+  let animId = null;
+  let time = 0;
+  let lastFrameTime = 0;
+
+  // Mouse interaction state
+  const mousePos = { x: -9999, y: -9999 };
+  let mouseActive = false;
+  const repulsionRadius = 120;
+  const repulsionStrength = 6;
+
+  const parentEl = container.closest('.footer-wake') || container;
+
+  parentEl.addEventListener('mousemove', (e) => {
+    const rect = container.getBoundingClientRect();
+    mousePos.x = e.clientX - rect.left;
+    mousePos.y = e.clientY - rect.top;
+    mouseActive = true;
+  });
+
+  parentEl.addEventListener('mouseleave', () => {
+    mouseActive = false;
+  });
+
+  parentEl.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+      const t = e.touches[0];
+      const rect = container.getBoundingClientRect();
+      mousePos.x = t.clientX - rect.left;
+      mousePos.y = t.clientY - rect.top;
+      mouseActive = true;
+    }
+  }, { passive: true });
+
+  parentEl.addEventListener('touchend', () => {
+    mouseActive = false;
+  });
+
+  function animate(now) {
+    const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.05) : 0.016;
+    lastFrameTime = now;
+    time += dt;
+
+    const cw = canvas.width;
+    const ch = canvas.height;
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.fillStyle = 'rgb(252, 18, 52)';
+
+    for (const p of particles) {
+      // Subtle organic breathing - same scale as hero shader
+      const breathe = Math.sin(time * 0.4 + p.phase) * 0.02;
+      const noiseX = Math.sin(p.originY * 0.03 + time * 0.5) * Math.cos(time * 0.4) * 0.8;
+      const noiseY = Math.cos(p.originX * 0.025 + time * 0.4) * Math.sin(time * 0.3) * 0.8;
+
+      const targetX = p.originX + noiseX + p.originX * breathe * 0.005;
+      const targetY = p.originY + noiseY + p.originY * breathe * 0.004;
+
+      // Mouse repulsion
+      if (mouseActive) {
+        const dx = p.x - mousePos.x;
+        const dy = p.y - mousePos.y;
+        const distSq = dx * dx + dy * dy;
+        const rSq = repulsionRadius * repulsionRadius;
+        if (distSq < rSq && distSq > 1) {
+          const dist = Math.sqrt(distSq);
+          const force = (1 - dist / repulsionRadius) * repulsionStrength;
+          p.vx += (dx / dist) * force;
+          p.vy += (dy / dist) * force;
+        }
+      }
+
+      // Spring back to target
+      p.vx += (targetX - p.x) * 0.06;
+      p.vy += (targetY - p.y) * 0.06;
+
+      // Damping
+      p.vx *= 0.85;
+      p.vy *= 0.85;
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      const flicker = 0.5 + 0.5 * Math.sin(time * 0.6 + p.phase);
+
+      ctx.globalAlpha = p.alpha * flicker;
+      ctx.beginPath();
+      ctx.arc(p.x * dpr, p.y * dpr, p.size * dpr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.globalAlpha = 1;
+    animId = requestAnimationFrame(animate);
+  }
+
+  // Visibility gating
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (!animId) { lastFrameTime = 0; animId = requestAnimationFrame(animate); }
+      } else {
+        if (animId) { cancelAnimationFrame(animId); animId = null; }
+      }
+    });
+  }, { threshold: 0 });
+  observer.observe(container);
+
+  let footerResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(footerResizeTimer);
+    footerResizeTimer = setTimeout(() => {
+      resize();
+      particles = sampleText('WAKE UP', 5000);
+    }, 200);
+  });
+}
+
+function initLiqTickers() {
+  const tokens = ['ETH', 'BTC', 'SOL', 'ARB', 'DOGE', 'AVAX', 'LINK', 'OP', 'SUI', 'PEPE', 'WIF', 'PENDLE', 'INJ', 'TIA', 'JUP', 'ONDO', 'FET', 'WLD', 'RENDER', 'MOODENG'];
+  const sides = ['LONG', 'SHORT'];
+
+  function randomAddr() {
+    const hex = '0123456789abcdef';
+    let a = '0x';
+    for (let i = 0; i < 4; i++) a += hex[Math.floor(Math.random() * 16)];
+    a += '...';
+    for (let i = 0; i < 4; i++) a += hex[Math.floor(Math.random() * 16)];
+    return a;
+  }
+
+  function randomLiq() {
+    const token = tokens[Math.floor(Math.random() * tokens.length)];
+    const side = sides[Math.floor(Math.random() * 2)];
+    const amount = (10 + Math.random() * 4990).toFixed(0);
+    const price = token === 'BTC' ? (90000 + Math.random() * 30000).toFixed(0)
+      : token === 'ETH' ? (3200 + Math.random() * 1200).toFixed(0)
+      : token === 'SOL' ? (150 + Math.random() * 100).toFixed(2)
+      : (0.1 + Math.random() * 50).toFixed(2);
+    const addr = randomAddr();
+    const sideClass = side === 'LONG' ? 'liq-side-long' : 'liq-side-short';
+    return `<span class="liq-ticker-item"><span class="liq-rekt">REKT</span> ${addr} liq. <span class="liq-amount">$${Number(amount).toLocaleString()}</span> <span class="${sideClass}">${side}</span> ${token} @ $${Number(price).toLocaleString()}<span class="liq-zap">\u26A1</span></span>`;
+  }
+
+  document.querySelectorAll('.liq-ticker-track').forEach(track => {
+    const items = [];
+    for (let i = 0; i < 20; i++) items.push(randomLiq());
+    const html = items.join('');
+    track.innerHTML = html + html; // duplicate for seamless loop
+    // Randomize speed slightly per ticker
+    const speed = 30 + Math.random() * 25;
+    track.style.animationDuration = speed + 's';
+  });
+}
+
+// ============================================
+// AI SENTIMENT + FEAR & GREED
+// ============================================
+
+function renderSentiment() {
+  const score = 97 + Math.floor(Math.random() * 3); // Always 97-99, pegged to max
+  const gaugeValue = document.getElementById('gaugeValue');
+  const gaugeMood = document.getElementById('gaugeMood');
+  const needle = document.getElementById('gaugeNeedle');
+
+  const moods = ['MAXIMUM DELUSION', 'PEAK EUPHORIA', 'TRANSCENDENT FOMO', 'BEYOND GREED', 'ABSOLUTE MANIA'];
+  if (gaugeMood) gaugeMood.textContent = moods[Math.floor(Math.random() * moods.length)];
+
+  // Animate needle with overshoot when section enters viewport
+  if (needle) {
+    needle.setAttribute('transform', 'rotate(-85, 140, 140)');
+    const targetAngle = -85 + (score / 100) * 170; // ~80deg
+    const overshootAngle = targetAngle + 8; // overshoot past max
+    let started = false;
+
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !started) {
+        started = true;
+        let startTime = null;
+        function animateNeedle(now) {
+          if (!startTime) startTime = now;
+          const elapsed = now - startTime;
+          const duration = 2000;
+          const t = Math.min(elapsed / duration, 1);
+          // Overshoot easing: goes past target then settles back with wobble
+          const ease = t < 0.6
+            ? (t / 0.6) * (t / 0.6) // accelerate
+            : 1 + Math.sin((t - 0.6) / 0.4 * Math.PI * 2.5) * 0.08 * (1 - t); // wobble
+          const angle = -85 + ease * (overshootAngle + 85);
+          needle.setAttribute('transform', `rotate(${Math.min(angle, overshootAngle)}, 140, 140)`);
+
+          // Tick up the score counter
+          if (gaugeValue) gaugeValue.textContent = Math.floor(ease * score);
+
+          if (t < 1) requestAnimationFrame(animateNeedle);
+          else {
+            needle.setAttribute('transform', `rotate(${targetAngle}, 140, 140)`);
+            if (gaugeValue) gaugeValue.textContent = score;
+            // Overheat shake - needle trembles at max (visibility-gated)
+            let shakeId = null;
+            function shakeNeedle() {
+              const wobble = targetAngle + (Math.random() - 0.3) * 4;
+              needle.setAttribute('transform', `rotate(${wobble}, 140, 140)`);
+              shakeId = requestAnimationFrame(shakeNeedle);
+            }
+            shakeNeedle();
+            // Stop shaking when gauge leaves viewport
+            const shakeObs = new IntersectionObserver((entries) => {
+              if (entries[0].isIntersecting) {
+                if (!shakeId) shakeNeedle();
+              } else {
+                if (shakeId) { cancelAnimationFrame(shakeId); shakeId = null; }
+              }
+            }, { threshold: 0 });
+            shakeObs.observe(gaugeEl);
+          }
+        }
+        requestAnimationFrame(animateNeedle);
+      }
+    }, { threshold: 0.3 });
+    const gaugeEl = needle.closest('.gauge-container') || needle.closest('svg');
+    if (gaugeEl) obs.observe(gaugeEl);
+  }
+
+  // Joke sentiment metrics
+  const metrics = [
+    { label: 'Altcoin Bullmarket', value: '99%', red: false },
+    { label: 'L2 Dominance', value: '80%', red: false },
+    { label: 'Buterin Sells', value: '100%', red: true },
+    { label: 'Elon Musk Activity', value: '95%', red: false },
+    { label: 'Copium Index', value: 'MAXIMUM', red: true },
+    { label: 'Rug Pull Probability', value: 'Yes', red: true },
+    { label: 'Degen Confidence', value: '97/100', red: false },
+    { label: 'CT Consensus', value: 'WAGMI (probably not)', red: false },
+  ];
+
+  const container = document.getElementById('sentimentMetrics');
+  if (!container) return;
+  container.innerHTML = metrics.map(m => `
+    <div class="sentiment-metric">
+      <span class="sentiment-metric-label">${m.label}</span>
+      <span class="sentiment-metric-value${m.red ? ' red' : ''}">${m.value}</span>
+    </div>
+  `).join('');
+}
+
+// ============================================
+// CURSOR PARTICLE TRAIL
+// ============================================
+
+function initCursorTrail() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const canvas = document.getElementById('cursorTrail');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let dpr = Math.min(window.devicePixelRatio, 2);
+  const MAX_TRAIL_PARTICLES = 150;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+  }
+  resize();
+
+  const particles = [];
+  let mouseX = -100, mouseY = -100;
+  let trailRafId = null;
+  let lastTime = 0;
+
+  function spawnParticles(cx, cy) {
+    for (let i = 0; i < 2; i++) {
+      if (particles.length >= MAX_TRAIL_PARTICLES) break;
+      particles.push({
+        x: cx * dpr,
+        y: cy * dpr,
+        vx: (Math.random() - 0.5) * 2 * dpr,
+        vy: (Math.random() - 0.5) * 2 * dpr,
+        life: 1,
+        decay: 0.015 + Math.random() * 0.02,
+        size: (1 + Math.random() * 2) * dpr,
+      });
+    }
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    spawnParticles(mouseX, mouseY);
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    const t = e.touches[0];
+    if (!t) return;
+    mouseX = t.clientX;
+    mouseY = t.clientY;
+    spawnParticles(mouseX, mouseY);
+  }, { passive: true });
+
+  function animate(now) {
+    trailRafId = requestAnimationFrame(animate);
+    if (window._lightModeActive || document.hidden) return;
+
+    const dt = lastTime ? Math.min((now - lastTime) / 16.667, 3) : 1;
+    lastTime = now;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgb(252, 18, 52)';
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 0.05 * dpr * dt;
+      p.life -= p.decay * dt;
+
+      if (p.life <= 0) {
+        particles.splice(i, 1);
+        continue;
+      }
+
+      ctx.globalAlpha = p.life * 0.6;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function startTrail() {
+    if (trailRafId) return;
+    lastTime = 0;
+    trailRafId = requestAnimationFrame(animate);
+  }
+  function stopTrail() {
+    if (trailRafId) { cancelAnimationFrame(trailRafId); trailRafId = null; }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopTrail(); else if (!window._lightModeActive) startTrail();
+  });
+
+  // Expose stop/start for light mode toggle
+  window._cursorTrailStop = stopTrail;
+  window._cursorTrailStart = startTrail;
+
+  startTrail();
+
+  let trailResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(trailResizeTimer);
+    trailResizeTimer = setTimeout(resize, 200);
+  });
+}
+
+// ============================================
+// AMBIENT BACKGROUND PARTICLES
+// Hero-style bright red embers - scroll with the page
+// Particles live in "world" (document) coordinates.
+// Canvas is fixed; we offset by scrollY when drawing.
+// ============================================
+
+function initAmbientParticles() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const canvas = document.getElementById('ambientParticles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let dpr = Math.min(window.devicePixelRatio, 2);
+  let viewW, viewH, docH;
+
+  function measure() {
+    dpr = Math.min(window.devicePixelRatio, 2);
+    viewW = window.innerWidth * dpr;
+    viewH = window.innerHeight * dpr;
+    docH = Math.max(document.documentElement.scrollHeight, window.innerHeight) * dpr;
+    canvas.width = viewW;
+    canvas.height = viewH;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+  }
+  measure();
+
+  // Particles spread across the full document height
+  const count = 1500;
+  const pts = [];
+  function spawnParticle() {
+    const tier = Math.random();
+    let size, alpha;
+    if (tier < 0.6) {
+      size = (0.5 + Math.random() * 1.5) * dpr;
+      alpha = 0.08 + Math.random() * 0.15;
+    } else if (tier < 0.9) {
+      size = (1.5 + Math.random() * 2.5) * dpr;
+      alpha = 0.2 + Math.random() * 0.3;
+    } else {
+      size = (2.5 + Math.random() * 3.5) * dpr;
+      alpha = 0.4 + Math.random() * 0.35;
+    }
+    return {
+      x: Math.random() * viewW,
+      wy: Math.random() * docH, // world Y - spread across full page
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: -0.05 - Math.random() * 0.15,
+      size,
+      alpha,
+      phase: Math.random() * Math.PI * 2,
+      flickerSpeed: 0.5 + Math.random() * 2.0,
+      wobbleAmp: 0.1 + Math.random() * 0.3,
+      wobbleSpeed: 0.3 + Math.random() * 0.6,
+    };
+  }
+  for (let i = 0; i < count; i++) pts.push(spawnParticle());
+
+  let time = 0;
+  let ambRafId = null;
+  let lastTime = 0;
+
+  function animate(now) {
+    ambRafId = requestAnimationFrame(animate);
+    if (window._lightModeActive || document.hidden) return;
+
+    const dt = lastTime ? Math.min((now - lastTime) / 16.667, 3) : 1;
+    lastTime = now;
+    time += 0.006 * dt;
+
+    const scrollTop = window.scrollY * dpr;
+    const viewBottom = scrollTop + viewH;
+    const margin = 60 * dpr; // off-screen margin
+
+    ctx.clearRect(0, 0, viewW, viewH);
+
+    for (const p of pts) {
+      // Movement in world coordinates
+      p.x += (p.vx + Math.sin(time * p.wobbleSpeed + p.phase) * p.wobbleAmp) * dt;
+      p.wy += (p.vy + Math.cos(time * 0.5 + p.phase) * 0.05) * dt;
+
+      // Wrap X
+      if (p.x < -10) p.x = viewW + 10;
+      if (p.x > viewW + 10) p.x = -10;
+      // Wrap Y in document space
+      if (p.wy < -margin) { p.wy = docH + margin; p.x = Math.random() * viewW; }
+      if (p.wy > docH + margin) { p.wy = -margin; p.x = Math.random() * viewW; }
+
+      // Screen Y = world Y - scrollTop
+      const sy = p.wy - scrollTop;
+
+      // Cull: skip if off-screen (with generous margin for glow radius)
+      if (sy < -margin || sy > viewH + margin) continue;
+
+      // Flicker
+      const flicker = 0.5 + 0.5 * Math.sin(time * p.flickerSpeed + p.phase);
+      const a = p.alpha * flicker;
+
+      if (p.size > 2.5 * dpr) {
+        const glowR = p.size * 3;
+        const grad = ctx.createRadialGradient(p.x, sy, 0, p.x, sy, glowR);
+        grad.addColorStop(0, `rgba(252, 18, 52, ${a * 0.5})`);
+        grad.addColorStop(0.4, `rgba(252, 40, 70, ${a * 0.2})`);
+        grad.addColorStop(1, 'rgba(252, 18, 52, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, sy, glowR, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = `rgba(255, 80, 100, ${a * 0.9})`;
+        ctx.beginPath();
+        ctx.arc(p.x, sy, p.size * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.globalAlpha = a;
+        ctx.fillStyle = 'rgb(252, 18, 52)';
+        ctx.beginPath();
+        ctx.arc(p.x, sy, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+
+  function startAmb() {
+    if (ambRafId) return;
+    lastTime = 0;
+    ambRafId = requestAnimationFrame(animate);
+  }
+  function stopAmb() {
+    if (ambRafId) { cancelAnimationFrame(ambRafId); ambRafId = null; }
+    ctx.clearRect(0, 0, viewW, viewH);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAmb(); else if (!window._lightModeActive) startAmb();
+  });
+
+  window._ambientStop = stopAmb;
+  window._ambientStart = startAmb;
+
+  startAmb();
+
+  // Re-measure docH after content finishes rendering
+  setTimeout(() => {
+    const oldDocH = docH;
+    measure();
+    if (docH !== oldDocH) {
+      for (const p of pts) { p.wy = Math.random() * docH; }
+    }
+  }, 3000);
+
+  let ambResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(ambResizeTimer);
+    ambResizeTimer = setTimeout(() => {
+      measure();
+      for (const p of pts) {
+        p.wy = Math.random() * docH;
+        p.x = Math.random() * viewW;
+      }
+    }, 200);
+  });
+}
+
+// ============================================
+// LARGE GLOWING RED PARTICLES
+// Big bright orbs - scroll with the page (world coords)
+// ============================================
+
+function initGlowParticles() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const canvas = document.getElementById('glowParticles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let dpr = Math.min(window.devicePixelRatio, 2);
+  let viewW, viewH, docH;
+
+  function measure() {
+    dpr = Math.min(window.devicePixelRatio, 2);
+    viewW = window.innerWidth * dpr;
+    viewH = window.innerHeight * dpr;
+    docH = Math.max(document.documentElement.scrollHeight, window.innerHeight) * dpr;
+    canvas.width = viewW;
+    canvas.height = viewH;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+  }
+  measure();
+
+  const count = 200;
+  const pts = [];
+  for (let i = 0; i < count; i++) {
+    const tier = Math.random();
+    let radius, alpha;
+    if (tier < 0.5) {
+      radius = (3 + Math.random() * 4) * dpr;
+      alpha = 0.15 + Math.random() * 0.2;
+    } else if (tier < 0.85) {
+      radius = (5 + Math.random() * 6) * dpr;
+      alpha = 0.2 + Math.random() * 0.25;
+    } else {
+      radius = (8 + Math.random() * 6) * dpr;
+      alpha = 0.25 + Math.random() * 0.3;
+    }
+    pts.push({
+      x: Math.random() * viewW,
+      wy: Math.random() * docH, // world Y
+      vx: (Math.random() - 0.5) * 0.12,
+      vy: -0.02 - Math.random() * 0.08,
+      radius,
+      alpha,
+      phase: Math.random() * Math.PI * 2,
+      pulseSpeed: 0.2 + Math.random() * 0.5,
+      wobblePhase: Math.random() * Math.PI * 2,
+    });
+  }
+
+  let time = 0;
+  let glowRafId = null;
+  let lastTime = 0;
+
+  function animate(now) {
+    glowRafId = requestAnimationFrame(animate);
+    if (window._lightModeActive || document.hidden) return;
+
+    const dt = lastTime ? Math.min((now - lastTime) / 16.667, 3) : 1;
+    lastTime = now;
+    time += 0.004 * dt;
+
+    const scrollTop = window.scrollY * dpr;
+    const margin = 100 * dpr;
+
+    ctx.clearRect(0, 0, viewW, viewH);
+
+    for (const p of pts) {
+      // Move in world coords
+      p.x += (p.vx + Math.sin(time * 0.7 + p.wobblePhase) * 0.06) * dt;
+      p.wy += (p.vy + Math.cos(time * 0.5 + p.phase) * 0.04) * dt;
+
+      // Wrap X
+      if (p.x < -40) p.x = viewW + 40;
+      if (p.x > viewW + 40) p.x = -40;
+      // Wrap Y in document space
+      if (p.wy < -margin) { p.wy = docH + margin; p.x = Math.random() * viewW; }
+      if (p.wy > docH + margin) { p.wy = -margin; p.x = Math.random() * viewW; }
+
+      // Screen Y
+      const sy = p.wy - scrollTop;
+      if (sy < -margin || sy > viewH + margin) continue;
+
+      const pulse = 0.5 + 0.5 * Math.sin(time * p.pulseSpeed * 2 + p.phase);
+      const a = p.alpha * pulse;
+
+      // Large soft outer glow halo
+      const glowRadius = p.radius * 5;
+      const grad = ctx.createRadialGradient(p.x, sy, 0, p.x, sy, glowRadius);
+      grad.addColorStop(0, `rgba(252, 18, 52, ${a * 0.5})`);
+      grad.addColorStop(0.15, `rgba(252, 30, 60, ${a * 0.3})`);
+      grad.addColorStop(0.4, `rgba(252, 18, 52, ${a * 0.1})`);
+      grad.addColorStop(1, 'rgba(252, 18, 52, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, sy, glowRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Inner glow
+      const innerGrad = ctx.createRadialGradient(p.x, sy, 0, p.x, sy, p.radius * 1.5);
+      innerGrad.addColorStop(0, `rgba(255, 100, 120, ${a * 0.8})`);
+      innerGrad.addColorStop(0.5, `rgba(252, 40, 65, ${a * 0.4})`);
+      innerGrad.addColorStop(1, 'rgba(252, 18, 52, 0)');
+      ctx.fillStyle = innerGrad;
+      ctx.beginPath();
+      ctx.arc(p.x, sy, p.radius * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hot white-pink core
+      ctx.fillStyle = `rgba(255, 140, 160, ${a * 0.9})`;
+      ctx.beginPath();
+      ctx.arc(p.x, sy, p.radius * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function startGlow() {
+    if (glowRafId) return;
+    lastTime = 0;
+    glowRafId = requestAnimationFrame(animate);
+  }
+  function stopGlow() {
+    if (glowRafId) { cancelAnimationFrame(glowRafId); glowRafId = null; }
+    ctx.clearRect(0, 0, viewW, viewH);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopGlow(); else if (!window._lightModeActive) startGlow();
+  });
+
+  window._glowStop = stopGlow;
+  window._glowStart = startGlow;
+
+  startGlow();
+
+  // Re-measure docH after content finishes rendering
+  setTimeout(() => {
+    const oldDocH = docH;
+    measure();
+    if (docH !== oldDocH) {
+      for (const p of pts) { p.wy = Math.random() * docH; }
+    }
+  }, 3000);
+
+  let glowResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(glowResizeTimer);
+    glowResizeTimer = setTimeout(() => {
+      measure();
+      for (const p of pts) {
+        p.wy = Math.random() * docH;
+        p.x = Math.random() * viewW;
+      }
+    }, 200);
+  });
+}
+
+// ============================================
+// PARALLAX SCROLL
+// ============================================
+
+function initParallax() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const sections = document.querySelectorAll('.section');
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const viewCenter = window.innerHeight / 2;
+        const offset = (center - viewCenter) * 0.03;
+        const header = sec.querySelector('.section-header');
+        if (header) header.style.setProperty('--parallax-y', offset + 'px');
+      });
+      ticking = false;
+    });
+  }, { passive: true });
+}
+
+// ============================================
+// GLITCH REVEAL ON SECTION TITLES
+// ============================================
+
+function initGlitchReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const title = entry.target.querySelector('.section-title');
+        if (title && !title.classList.contains('glitch-reveal')) {
+          title.setAttribute('data-text', title.textContent);
+          title.classList.add('glitch-reveal');
+          // Remove after animation completes
+          setTimeout(() => {
+            title.classList.remove('glitch-reveal');
+          }, 500);
+        }
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.section-header').forEach(el => observer.observe(el));
+}
+
+// ============================================
+// PREMIUM UPGRADE MODAL
+// ============================================
+
+function initPremiumModal() {
+  const overlay = document.getElementById('premiumOverlay');
+  const closeBtn = document.getElementById('premiumClose');
+  const cta = document.getElementById('premiumCta');
+  const modal = overlay ? overlay.querySelector('.premium-modal') : null;
+  if (!overlay) return;
+
+  function showPremium() {
+    if (window._lightModeActive) return;
+    // Reset animation by removing and re-adding the modal
+    if (modal) {
+      modal.style.animation = 'none';
+      modal.offsetHeight; // force reflow
+      modal.style.animation = '';
+    }
+    overlay.classList.add('show');
+  }
+  function hidePremium() {
+    overlay.classList.remove('show');
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', hidePremium);
+  if (cta) cta.addEventListener('click', () => {
+    setTimeout(hidePremium, 300);
+  });
+
+  // Dismiss on overlay click (not modal itself)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) hidePremium();
+  });
+
+  // Escape key to dismiss
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('show')) {
+      hidePremium();
+    }
+  });
+
+  // Show first time after 90 seconds, then every 90 seconds
+  const premiumIntervalId = setTimeout(() => {
+    showPremium();
+    window._premiumIntervalId = setInterval(showPremium, 90000);
+  }, 90000);
+  window._premiumTimeoutId = premiumIntervalId;
+}
+
+// ============================================
+// MANIFESTO LANGUAGE TOGGLE
+// ============================================
+
+function initManifestoLang() {
+  const hint = document.getElementById('manifestoLangHint');
+  const manifesto = document.getElementById('footerManifesto');
+  const bubble = document.getElementById('manifestoLangBubble');
+  if (!hint || !manifesto) return;
+
+  const btns = hint.querySelectorAll('.manifesto-lang-btn');
+
+  // Detect browser language
+  const browserLang = (navigator.language || 'en').toLowerCase();
+  const isRu = browserLang.startsWith('ru');
+
+  // Set bubble text based on browser language
+  if (bubble) {
+    bubble.textContent = isRu
+      ? 'Бро, если тебе тяжело, тут есть перевод на другой язык... Правда только для этого блока, но всё же ведь...'
+      : 'Bro, if you\'re struggling, there\'s a translation available... Only for this block though, but still...';
+  }
+
+  // Always start in EN - user must click RU manually
+
+  // Show/hide hint based on manifesto visibility
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      hint.classList.toggle('visible', entry.isIntersecting);
+    });
+  }, { threshold: 0.1 });
+  observer.observe(manifesto);
+
+  // Toggle language
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.dataset.lang;
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (lang === 'ru') {
+        manifesto.classList.add('lang-ru');
+      } else {
+        manifesto.classList.remove('lang-ru');
+      }
+      // Update bubble text to match the "other" language hint
+      if (bubble) {
+        bubble.textContent = lang === 'ru'
+          ? 'Bro, if you\'re struggling, there\'s a translation available... Only for this block though, but still...'
+          : 'Бро, если тебе тяжело, тут есть перевод на другой язык... Правда только для этого блока, но всё же ведь...';
+      }
+    });
+  });
+}
+
+// ============================================
+// LIGHT MODE TOGGLE (THE HORROR)
+// ============================================
+
+function initThemeToggle() {
+  const toggle = document.getElementById('themeToggle');
+  const backBtn = document.getElementById('lightModeBack');
+  if (!toggle) return;
+  window._lightModeActive = false;
+
+  toggle.addEventListener('click', () => {
+    window._lightModeActive = true;
+    document.body.classList.add('light-mode');
+    toggle.textContent = 'dark';
+    // Stop canvas animations (CSS display:none doesn't stop JS loops)
+    if (window._cursorTrailStop) window._cursorTrailStop();
+    if (window._ambientStop) window._ambientStop();
+    if (window._glowStop) window._glowStop();
+  });
+
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      window._lightModeActive = false;
+      document.body.classList.remove('light-mode');
+      toggle.textContent = 'white theme';
+      // Restart canvas animations
+      if (window._cursorTrailStart) window._cursorTrailStart();
+      if (window._ambientStart) window._ambientStart();
+      if (window._glowStart) window._glowStart();
+    });
+  }
+}
+
+
+
+// ============================================
+// HERO TYPEWRITER EFFECT
+// ============================================
+
+function initHeroTypewriter() {
+  const el = document.getElementById('heroRotatingWord');
+  if (!el) return;
+
+  const words = ['Alpha', 'Bitches', 'Lambo', 'Swag', 'Money', 'MaxWayld'];
+  let wordIndex = 0;
+  let charIndex = words[0].length;
+  let isDeleting = true;
+  let pauseTimer = null;
+
+  // Add cursor element
+  const cursor = document.createElement('span');
+  cursor.className = 'typewriter-cursor';
+  el.appendChild(cursor);
+
+  function tick() {
+    const currentWord = words[wordIndex];
+
+    if (isDeleting) {
+      charIndex--;
+      el.textContent = currentWord.slice(0, charIndex);
+      el.appendChild(cursor);
+
+      if (charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        pauseTimer = setTimeout(tick, 300);
+        return;
+      }
+      pauseTimer = setTimeout(tick, 50 + Math.random() * 30);
+    } else {
+      const nextWord = words[wordIndex];
+      charIndex++;
+      el.textContent = nextWord.slice(0, charIndex);
+      el.appendChild(cursor);
+
+      if (charIndex === nextWord.length) {
+        isDeleting = true;
+        pauseTimer = setTimeout(tick, 4000);
+        return;
+      }
+      pauseTimer = setTimeout(tick, 80 + Math.random() * 60);
+    }
+  }
+
+  // Start after initial 5s display
+  setTimeout(tick, 5000);
+}
+
+// ============================================
+// SCROLL REVEAL
+// ============================================
+
+function initScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// ============================================
+// NAVBAR SCROLL EFFECT
+// ============================================
+
+function initNavbar() {
+  const navbar = document.getElementById('navbar');
+  if (!navbar) return;
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        if (window.scrollY > 80) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+}
+
+// ============================================
+// PERIODIC UPDATES
+// ============================================
+
+function startIntervals() {
+  // Refresh funding table
+  window._fundingIntervalId = setInterval(renderFunding, 4000);
+  // Refresh news headlines
+  window._newsIntervalId = setInterval(renderNews, 12000);
+  // Notification toast cycle (30s on, 30s off, repeating)
+  startNotifCycle();
+
+  // Pause all intervals when tab is hidden, restart cleanly on return
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(window._fundingIntervalId); window._fundingIntervalId = null;
+      clearInterval(window._newsIntervalId); window._newsIntervalId = null;
+      clearInterval(window._notifIntervalId); window._notifIntervalId = null;
+      clearTimeout(window._notifTimeoutId); window._notifTimeoutId = null;
+      clearInterval(window._premiumIntervalId); window._premiumIntervalId = null;
+      clearTimeout(window._premiumTimeoutId); window._premiumTimeoutId = null;
+    } else {
+      if (!window._fundingIntervalId) window._fundingIntervalId = setInterval(renderFunding, 4000);
+      if (!window._newsIntervalId) window._newsIntervalId = setInterval(renderNews, 12000);
+      if (!window._notifIntervalId) {
+        window._notifTimeoutId = setTimeout(() => {
+          showNotifToast();
+          window._notifIntervalId = setInterval(showNotifToast, 30000);
+        }, 5000);
+      }
+      if (!window._premiumIntervalId) {
+        window._premiumTimeoutId = setTimeout(() => {
+          window._premiumIntervalId = setInterval(() => {
+            const overlay = document.getElementById('premiumOverlay');
+            if (overlay && !window._lightModeActive) {
+              const modal = overlay.querySelector('.premium-modal');
+              if (modal) { modal.style.animation = 'none'; modal.offsetHeight; modal.style.animation = ''; }
+              overlay.classList.add('show');
+            }
+          }, 90000);
+        }, 90000);
+      }
+    }
+  });
+}
+
+// ============================================
+// INIT
+// ============================================
+
+function init() {
+  // Skip initialization on mobile - blocker screen is shown instead
+  if (window.innerWidth <= 768) return;
+
+  // 3D Hero (wrapped in try/catch - CDN failure should not kill the page)
+  try { initHero(); } catch (e) { console.warn('Hero init failed:', e); }
+  initHeroTypewriter();
+
+  // Track section visibility for optimized updates
+  _trackSectionVisibility('funding', 'funding');
+  _trackSectionVisibility('news', 'news');
+
+  // Render all dashboard content
+  renderFunding();
+  renderPredictions();
+  renderPoints();
+  renderWhales();
+  renderNews();
+  renderSentiment();
+
+  // Testimonials carousel
+  renderTestimonials();
+
+  // Points calculator
+  initPointsCalc();
+
+  // Promo blocks with random data
+  initPromoBlocks();
+
+  // Particle separators between sections
+  initLiqTickers();
+
+  // Footer WAKE UP particle text
+  initFooterWake();
+
+  // Visual effects
+  initCursorTrail();
+  initAmbientParticles();
+  initGlowParticles();
+  initParallax();
+  initGlitchReveal();
+
+  // Scroll reveal
+  initScrollReveal();
+
+  // Navbar
+  initNavbar();
+
+  // Interactive features
+  initPremiumModal();
+  initThemeToggle();
+  initManifestoLang();
+
+  // Cookie banner dismiss (persisted)
+  const cookieBtn = document.getElementById('cookieAccept');
+  const cookieBanner = document.getElementById('cookieBanner');
+  if (cookieBtn && cookieBanner) {
+    if (localStorage.getItem('cookieAccepted')) {
+      cookieBanner.style.display = 'none';
+      cookieBanner.style.animation = 'none';
+    } else {
+      cookieBtn.addEventListener('click', () => {
+        cookieBanner.classList.add('hidden');
+        localStorage.setItem('cookieAccepted', '1');
+        setTimeout(() => { cookieBanner.style.display = 'none'; }, 500);
+      });
+    }
+  }
+
+  // Start periodic updates
+  startIntervals();
+
+  // Loader sequence
+  const loaderSteps = [
+    { text: 'Connecting to 22 exchanges...', pct: 15 },
+    { text: 'Loading funding rate data...', pct: 35 },
+    { text: 'Parsing whale wallets...', pct: 55 },
+    { text: 'Initializing AI sentiment model...', pct: 75 },
+    { text: 'Calibrating vibes...', pct: 95 },
+    { text: 'Ready.', pct: 100 },
+  ];
+  const loaderTextEl = document.getElementById('loaderText');
+  const loaderFill = document.getElementById('loaderFill');
+  let step = 0;
+  function nextLoaderStep() {
+    if (step < loaderSteps.length) {
+      if (loaderTextEl) loaderTextEl.textContent = loaderSteps[step].text;
+      if (loaderFill) loaderFill.style.width = loaderSteps[step].pct + '%';
+      step++;
+      setTimeout(nextLoaderStep, 350 + Math.random() * 250);
+    } else {
+      setTimeout(() => {
+        const loader = document.getElementById('loader');
+        if (!loader) return;
+        loader.classList.add('hidden');
+        loader.addEventListener('transitionend', () => {
+          loader.style.display = 'none';
+        }, { once: true });
+      }, 300);
+    }
+  }
+  nextLoaderStep();
+}
+
+init();
+</script>
+</body>
+</html>
