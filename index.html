@@ -2108,10 +2108,10 @@ body.light-mode .light-mode-warning { display: flex !important; }
     <div class="promo-block reveal" id="promo-news">
       <div class="promo-label"><span class="promo-dot"></span> Meme Flip Result</div>
       <div class="promo-headline">
-        Flipping <em>$PUTINCHAIN</em> on the Putin-Trump rumor netted <span class="promo-amount" id="promo-news-amount">$6,942</span>
+        Flipping <em>$SATOSHIMOVE</em> on the Satoshi wallet rumor netted <span class="promo-amount" id="promo-news-amount">$6,942</span>
       </div>
       <div class="promo-detail">
-        Our news scanner detected the Putin-Trump headline <strong>47 seconds</strong> before Crypto Twitter. Users who aped into the related memecoin with <strong>50x leverage</strong> caught an x120 pump before the debunk. The token is now worth zero but profits were taken.
+        Our news scanner detected a <strong>0.01 BTC transfer</strong> from a Satoshi-era wallet <strong>47 seconds</strong> before Crypto Twitter. Users who aped into the related memecoin with <strong>50x leverage</strong> caught an x200 pump before everyone realized it was a different wallet. The token is now worth zero but profits were taken.
       </div>
       <div class="promo-time">
         Headline detected at <span class="time-value" id="promo-news-time">03:12 UTC</span>
@@ -2862,7 +2862,7 @@ function renderWhales() {
 // ============================================
 
 const newsHeadlines = [
-  { headline: 'Putin to meet Trump, allegedly buying the entire Solana blockchain. Token <strong>$PUTINCHAIN</strong> up x120 in 4 minutes.', token: '$PUTINCHAIN', gain: 'x120', badge: 'GEOPOLITICS' },
+  { headline: 'Satoshi-era wallet moves 0.01 BTC after 14 years of silence. Token <strong>$SATOSHIMOVE</strong> up x200 in 3 minutes. It was a different wallet.', token: '$SATOSHIMOVE', gain: 'x200', badge: 'ON-CHAIN' },
   { headline: 'Is Vitalik Buterin a woman? Token <strong>$ButerinHasNoDick</strong> already did x80. Ethereum devs refuse to comment.', token: '$ButerinHasNoDick', gain: 'x80', badge: 'RUMOR' },
   { headline: 'ZachXBT made $3M speculating on his own investigation. Community calls it "meta-alpha".', token: '$ZACHRUG', gain: 'x45', badge: 'INVESTIGATION' },
   { headline: 'Harry Potter to arrive instead of Jesus this year? Polymarket gives it 12%. Token <strong>$HOGWARTS</strong> pumping.', token: '$HOGWARTS', gain: 'x34', badge: 'PREDICTION' },
@@ -2997,7 +2997,7 @@ function showNotifToast() {
   const joke = pick(notifJokes);
 
   function applyContent() {
-    renderBounceTitle(titleEl, 'RECOMMENDED EXCHANGE');
+    renderBounceTitle(titleEl, 'MY FAMILY NEED MORE REFS PLS');
     linkEl.href = link;
     linkEl.textContent = link;
     jokeEl.textContent = joke;
